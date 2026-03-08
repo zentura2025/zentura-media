@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Wall — Zentura Media</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan:    #00eaff;
+      --magenta: #ff00ff;
+      --border:  rgba(255,255,255,0.08);
+      --dim:     rgba(255,255,255,0.45);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* scanline */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent, transparent 2px,
+        rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 900;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 18px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 200;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    }
+    .nav-brand {
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-back {
+      font-size: 0.75rem; color: var(--dim);
+      text-decoration: none; letter-spacing: 0.1em;
+      text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--cyan); }
+
+    /* SCROLL HINT */
+    .scroll-hint {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.62rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+      z-index: 200; display: flex; align-items: center; gap: 10px;
+      animation: fadeHint 4s ease 1.2s forwards; opacity: 0;
+    }
+    .scroll-hint::before, .scroll-hint::after {
+      content: '→';
+      animation: nudge 1.4s ease-in-out infinite;
+    }
+    @keyframes nudge {
+      0%,100% { transform: translateX(0); opacity: 0.3; }
+      50%      { transform: translateX(6px); opacity: 1; }
+    }
+    @keyframes fadeHint {
+      0%  { opacity: 0; } 15% { opacity: 1; }
+      75% { opacity: 1; } 100% { opacity: 0; }
+    }
+
+    /* STAGE — horizontal scroll container */
+    .stage {
+      width: 100vw; height: 100vh;
+      overflow-x: scroll; overflow-y: hidden;
+      cursor: grab;
+      -webkit-overflow-scrolling: touch;
+    }
+    .stage:active { cursor: grabbing; }
+    .stage::-webkit-scrollbar { height: 3px; }
+    .stage::-webkit-scrollbar-track { background: #0a0a0a; }
+    .stage::-webkit-scrollbar-thumb { background: rgba(255,0,255,0.25); }
+
+    /* THE WALL */
+    .wall {
+      height: 100vh; width: 5000px;
+      position: relative;
+      background:
+        url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=2000&q=75') center/cover no-repeat;
+    }
+    /* Dark gritty overlay */
+    .wall::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.52); z-index: 0;
+    }
+    /* Noise grain */
+    .wall::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+      pointer-events: none; opacity: 0.6;
+    }
+
+    /* ART PIECE */
+    .piece {
+      position: absolute; z-index: 10;
+      cursor: pointer;
+      transition: transform 0.35s ease, filter 0.3s ease, z-index 0s;
+      transform-origin: center center;
+    }
+    .piece:hover { z-index: 50; filter: brightness(1.2) saturate(1.15); }
+
+    .piece img {
+      display: block; width: 100%; height: 100%; object-fit: cover;
+      box-shadow: 6px 8px 30px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.05);
+      mix-blend-mode: multiply;
+    }
+
+    /* spray halo */
+    .piece::before {
+      content: ''; position: absolute; inset: -18px;
+      background: radial-gradient(ellipse at center, rgba(255,0,255,0.18) 0%, transparent 68%);
+      opacity: 0; transition: opacity 0.35s; z-index: -1; pointer-events: none;
+    }
+    .piece:hover::before { opacity: 1; }
+
+    /* graffiti tag */
+    .tag {
+      position: absolute; bottom: -20px; left: 2px;
+      font-size: 0.58rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.28);
+      font-style: italic; white-space: nowrap;
+      transition: color 0.2s;
+    }
+    .piece:hover .tag { color: var(--cyan); }
+
+    /* PIECE POSITIONS — messy, overlapping */
+    .p1 { left: 60px; top: 15vh; width: 200px; height: 400px; transform: rotate(-4deg); }
+    .p2  { left: 240px;  top: 42vh; width: 310px; height: 250px; transform: rotate(2deg); }
+    .p3  { left: 420px;  top:  8vh; width: 230px; height: 290px; transform: rotate(-1.5deg); }
+    .p4  { left: 500px;  top: 48vh; width: 350px; height: 270px; transform: rotate(3deg); }
+    .p5  { left: 730px;  top: 12vh; width: 290px; height: 370px; transform: rotate(-2deg); }
+    .p6  { left: 820px;  top: 54vh; width: 250px; height: 210px; transform: rotate(1.5deg); }
+    .p7  { left:1020px;  top:  6vh; width: 330px; height: 250px; transform: rotate(3.5deg); }
+    .p8  { left:1100px;  top: 44vh; width: 270px; height: 330px; transform: rotate(-2deg); }
+    .p9  { left:1340px;  top: 18vh; width: 250px; height: 310px; transform: rotate(2.5deg); }
+    .p10 { left:1420px;  top: 52vh; width: 370px; height: 250px; transform: rotate(-1.5deg); }
+    .p11 { left:1680px;  top: 10vh; width: 290px; height: 350px; transform: rotate(1deg); }
+    .p12 { left:1760px;  top: 50vh; width: 230px; height: 270px; transform: rotate(-3.5deg); }
+    /* BIG statement piece */
+    .pbig{ left:1960px;  top:  5vh; width: 460px; height: 520px; transform: rotate(-1deg); z-index: 15; }
+    .p13 { left:2100px;  top: 54vh; width: 260px; height: 230px; transform: rotate(2deg); }
+    .p14 { left:2380px;  top: 16vh; width: 310px; height: 290px; transform: rotate(-2.5deg); }
+    .p15 { left:2460px;  top: 48vh; width: 270px; height: 320px; transform: rotate(1.5deg); }
+    .p16 { left:2680px;  top:  8vh; width: 250px; height: 300px; transform: rotate(3deg); }
+    .p17 { left:2760px;  top: 46vh; width: 330px; height: 260px; transform: rotate(-1deg); }
+    .p18 { left:2980px;  top: 14vh; width: 280px; height: 360px; transform: rotate(-3deg); }
+    .p19 { left:3080px;  top: 52vh; width: 300px; height: 240px; transform: rotate(2deg); }
+    .p20 { left:3300px;  top:  9vh; width: 260px; height: 310px; transform: rotate(1deg); }
+    .p21 { left:3380px;  top: 47vh; width: 350px; height: 270px; transform: rotate(-2deg); }
+    .p22 { left:3600px;  top: 16vh; width: 290px; height: 340px; transform: rotate(2.5deg); }
+    .p23 { left:3700px;  top: 50vh; width: 260px; height: 250px; transform: rotate(-1.5deg); }
+    /* coming soon */
+    .psoon{ left:4100px; top: 20vh; width: 320px; height: 380px; transform: rotate(1.5deg); }
+
+    /* COMING SOON */
+    .piece-soon {
+      position: absolute; z-index: 10;
+      border: 2px dashed rgba(255,255,255,0.12);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px;
+    }
+    .piece-soon .si { font-size: 2rem; opacity: 0.2; }
+    .piece-soon .sl {
+      font-size: 0.58rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: rgba(255,255,255,0.18);
+    }
+
+    /* VIGNETTE */
+    .vig {
+      position: fixed; top: 0; bottom: 0; width: 100px;
+      z-index: 100; pointer-events: none;
+    }
+    .vig-l { left: 0;  background: linear-gradient(to right, rgba(0,0,0,0.65), transparent); }
+    .vig-r { right: 0; background: linear-gradient(to left,  rgba(0,0,0,0.65), transparent); }
+
+    /* LIGHTBOX */
+    .lightbox {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.93);
+      z-index: 500; display: flex;
+      align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(12px);
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+
+    .lb-inner {
+      position: relative; max-width: 840px; width: 90%;
+      transform: scale(0.93) rotate(-0.8deg);
+      transition: transform 0.35s ease;
+    }
+    .lightbox.open .lb-inner { transform: scale(1) rotate(0deg); }
+
+    .lb-img {
+      width: 100%; max-height: 72vh;
+      object-fit: contain; display: block;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.85);
+    }
+    .lb-bar {
+      padding: 18px 0 0;
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .lb-title { font-size: 1.1rem; font-weight: 700; }
+    .lb-cat   { font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--cyan); margin-top: 5px; }
+    .lb-close {
+      position: absolute; top: -38px; right: 0;
+      background: none; border: none;
+      color: rgba(255,255,255,0.35); font-size: 0.72rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: pointer; font-family: inherit; transition: color 0.2s;
+    }
+    .lb-close:hover { color: var(--magenta); }
+    .lb-commission {
+      font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--magenta);
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .lb-commission:hover { opacity: 0.7; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-brand">Zentura Media</a>
+    <a href="stickers.html" class="nav-back">← Commission a piece</a>
+  </nav>
+
+  <div class="vig vig-l"></div>
+  <div class="vig vig-r"></div>
+  <div class="scroll-hint">scroll the wall</div>
+
+  <div class="stage" id="stage">
+    <div class="wall" id="wall">
+
+      <div class="piece p1"  data-title="Maverick"           data-cat="Pet Portrait"  onclick="openLb(this)"><img src="https://zentura.media/Gallery/Maverick.PNG"  alt=""/><span class="tag">portrait · 001</span></div>
+      <div class="piece p2"  data-title="Neon Critters"      data-cat="Sticker Set"   onclick="openLb(this)"><img src="https://picsum.photos/seed/z2/310/250"  alt=""/><span class="tag">stickers · 002</span></div>
+      <div class="piece p3"  data-title="Signal & Noise"     data-cat="Original Art"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z3/230/290"  alt=""/><span class="tag">original · 003</span></div>
+      <div class="piece p4"  data-title="The Captain"        data-cat="Figurine"      onclick="openLb(this)"><img src="https://picsum.photos/seed/z4/350/270"  alt=""/><span class="tag">figurine · 004</span></div>
+      <div class="piece p5"  data-title="Golden Hour Stella" data-cat="Pet Portrait"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z5/290/370"  alt=""/><span class="tag">portrait · 005</span></div>
+      <div class="piece p6"  data-title="City Ghosts"        data-cat="Sticker Set"   onclick="openLb(this)"><img src="https://picsum.photos/seed/z6/250/210"  alt=""/><span class="tag">stickers · 006</span></div>
+      <div class="piece p7"  data-title="Layered #001"       data-cat="Original Art"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z7/330/250"  alt=""/><span class="tag">original · 007</span></div>
+      <div class="piece p8"  data-title="Mochi & The Moon"   data-cat="Pet Portrait"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z8/270/330"  alt=""/><span class="tag">portrait · 008</span></div>
+      <div class="piece p9"  data-title="Static Dreams"      data-cat="Original Art"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z9/250/310"  alt=""/><span class="tag">original · 009</span></div>
+      <div class="piece p10" data-title="Velvet Pack"        data-cat="Sticker Set"   onclick="openLb(this)"><img src="https://picsum.photos/seed/z10/370/250" alt=""/><span class="tag">stickers · 010</span></div>
+      <div class="piece p11" data-title="Baron"              data-cat="Figurine"      onclick="openLb(this)"><img src="https://picsum.photos/seed/z11/290/350" alt=""/><span class="tag">figurine · 011</span></div>
+      <div class="piece p12" data-title="Rust & Bloom"       data-cat="Original Art"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z12/230/270" alt=""/><span class="tag">original · 012</span></div>
+
+      <!-- Big statement piece -->
+      <div class="piece pbig" data-title="The Wall — No. 1" data-cat="Original Art · Statement Piece" onclick="openLb(this)">
+        <img src="https://picsum.photos/seed/zbig/460/520" alt=""/>
+        <span class="tag">statement · 013</span>
+      </div>
+
+      <div class="piece p13" data-title="Echo Pack"          data-cat="Sticker Set"   onclick="openLb(this)"><img src="https://picsum.photos/seed/z13/260/230" alt=""/><span class="tag">stickers · 014</span></div>
+      <div class="piece p14" data-title="Nova"               data-cat="Pet Portrait"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z14/310/290" alt=""/><span class="tag">portrait · 015</span></div>
+      <div class="piece p15" data-title="Phantom"            data-cat="Pet Portrait"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z15/270/320" alt=""/><span class="tag">portrait · 016</span></div>
+      <div class="piece p16" data-title="Layered #002"       data-cat="Original Art"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z16/250/300" alt=""/><span class="tag">original · 017</span></div>
+      <div class="piece p17" data-title="Dusk Series"        data-cat="Sticker Set"   onclick="openLb(this)"><img src="https://picsum.photos/seed/z17/330/260" alt=""/><span class="tag">stickers · 018</span></div>
+      <div class="piece p18" data-title="The Oracle"         data-cat="Figurine"      onclick="openLb(this)"><img src="https://picsum.photos/seed/z18/280/360" alt=""/><span class="tag">figurine · 019</span></div>
+      <div class="piece p19" data-title="Copper & Chrome"    data-cat="Original Art"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z19/300/240" alt=""/><span class="tag">original · 020</span></div>
+      <div class="piece p20" data-title="Wolf Pack"          data-cat="Sticker Set"   onclick="openLb(this)"><img src="https://picsum.photos/seed/z20/260/310" alt=""/><span class="tag">stickers · 021</span></div>
+      <div class="piece p21" data-title="Solstice"           data-cat="Pet Portrait"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z21/350/270" alt=""/><span class="tag">portrait · 022</span></div>
+      <div class="piece p22" data-title="Layered #003"       data-cat="Original Art"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z22/290/340" alt=""/><span class="tag">original · 023</span></div>
+      <div class="piece p23" data-title="Ember"              data-cat="Pet Portrait"  onclick="openLb(this)"><img src="https://picsum.photos/seed/z23/260/250" alt=""/><span class="tag">portrait · 024</span></div>
+
+      <!-- Coming soon -->
+      <div class="piece-soon psoon">
+        <div class="si">✦</div>
+        <div class="sl">More dropping soon</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLb(event)">
+    <div class="lb-inner">
+      <button class="lb-close" onclick="closeLb()">✕ &nbsp; Close</button>
+      <img class="lb-img" id="lb-img" src="" alt=""/>
+      <div class="lb-bar">
+        <div>
+          <div class="lb-title" id="lb-title"></div>
+          <div class="lb-cat"   id="lb-cat"></div>
+        </div>
+        <a href="stickers.html#commission" class="lb-commission">Commission similar →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Drag to scroll
+    const stage = document.getElementById('stage');
+    let drag = false, startX, scrollStart;
+
+    stage.addEventListener('mousedown', e => {
+      drag = true; startX = e.pageX; scrollStart = stage.scrollLeft;
+    });
+    window.addEventListener('mouseup',    () => { drag = false; });
+    window.addEventListener('mousemove',  e => {
+      if (!drag) return;
+      e.preventDefault();
+      stage.scrollLeft = scrollStart - (e.pageX - startX) * 1.5;
+    });
+
+    // Mousewheel → horizontal
+    stage.addEventListener('wheel', e => {
+      e.preventDefault();
+      stage.scrollLeft += e.deltaY * 1.3;
+    }, { passive: false });
+
+    // Lightbox
+    function openLb(piece) {
+      document.getElementById('lb-img').src          = piece.querySelector('img').src;
+      document.getElementById('lb-title').textContent = piece.dataset.title;
+      document.getElementById('lb-cat').textContent   = piece.dataset.cat;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLb(e) {
+      if (!e || e.target.id === 'lightbox' || e.target.classList.contains('lb-close')) {
+        document.getElementById('lightbox').classList.remove('open');
+      }
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb({target:{id:'lightbox'}}); });
+  </script>
+
+</body>
+</html>

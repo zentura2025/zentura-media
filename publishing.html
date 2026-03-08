@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Publishing — Zentura Media</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan:    #00eaff;
+      --magenta: #ff00ff;
+      --black:   #000;
+      --white:   #fff;
+      --dim:     rgba(255,255,255,0.5);
+      --dim2:    rgba(255,255,255,0.22);
+      --card-bg: rgba(255,255,255,0.03);
+      --border:  rgba(255,255,255,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none; z-index: 999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 20px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+    }
+    .nav-brand {
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-back {
+      font-size: 0.8rem; color: var(--dim);
+      text-decoration: none; letter-spacing: 0.1em;
+      text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--cyan); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center;
+      padding: 140px 48px 100px;
+      position: relative; overflow: hidden;
+      max-width: 1200px; margin: 0 auto;
+    }
+
+    .orb {
+      position: fixed; border-radius: 50%;
+      filter: blur(90px); pointer-events: none;
+    }
+    .orb-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(0,234,255,0.06) 0%, transparent 70%);
+      top: -200px; right: -200px;
+      animation: drift1 18s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,0,255,0.05) 0%, transparent 70%);
+      bottom: 100px; left: -100px;
+      animation: drift2 22s ease-in-out infinite;
+    }
+    @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-50px,60px)} }
+    @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,-40px)} }
+
+    .hero-eyebrow {
+      font-size: 0.68rem; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--cyan);
+      margin-bottom: 28px; position: relative;
+      opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 96px);
+      font-weight: 800; line-height: 1.0;
+      letter-spacing: -0.03em;
+      max-width: 820px;
+      position: relative;
+      opacity: 0; animation: fadeUp 0.9s ease 0.35s forwards;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #ff00ff, #00eaff, #ff00ff);
+      background-size: 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmer 5s linear 1s infinite;
+    }
+
+    @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
+
+    .hero-philosophy {
+      font-size: 1.15rem; color: var(--dim);
+      max-width: 580px; line-height: 1.85;
+      margin: 36px 0 20px;
+      position: relative;
+      opacity: 0; animation: fadeUp 0.9s ease 0.55s forwards;
+    }
+
+    .hero-reassurance {
+      font-size: 0.95rem; color: var(--dim2);
+      max-width: 520px; line-height: 1.8;
+      margin-bottom: 52px;
+      position: relative;
+      opacity: 0; animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+
+    .hero-cta {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.9s ease 0.85s forwards;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      color: #000; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      text-decoration: none; padding: 14px 36px;
+      transition: opacity 0.2s, transform 0.2s; display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    .btn-ghost {
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--dim); text-decoration: none;
+      padding: 14px 36px; border: 1px solid var(--border);
+      transition: border-color 0.2s, color 0.2s; display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ── DIVIDER LINE ── */
+    .rule {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0;
+    }
+
+    /* ── SHARED SECTION ── */
+    .section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 48px;
+    }
+
+    .section-tag {
+      font-size: 0.65rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--magenta);
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: clamp(26px, 4vw, 46px);
+      font-weight: 700; line-height: 1.1;
+      margin-bottom: 48px;
+    }
+    .section-title .accent {
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    /* ── WHAT WE OFFER — steps grid ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+    }
+
+    .step {
+      background: var(--black); padding: 40px 28px;
+      transition: background 0.3s;
+    }
+    .step:hover { background: var(--card-bg); }
+
+    .step-num {
+      font-size: 2.2rem; font-weight: 800;
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1; margin-bottom: 18px;
+    }
+
+    .step h3 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 10px; letter-spacing: 0.03em;
+    }
+
+    .step p {
+      font-size: 0.85rem; color: var(--dim); line-height: 1.7;
+    }
+
+    /* ── PHILOSOPHY PULL QUOTE ── */
+    .pullquote {
+      max-width: 1200px; margin: 0 auto;
+      padding: 80px 48px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(0,234,255,0.03) 0%, rgba(255,0,255,0.03) 100%);
+      position: relative; overflow: hidden;
+    }
+
+    .pullquote::before {
+      content: '"';
+      position: absolute; top: -20px; left: 40px;
+      font-size: 18rem; line-height: 1;
+      background: linear-gradient(90deg, rgba(255,0,255,0.06), rgba(0,234,255,0.04));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      pointer-events: none; font-family: Georgia, serif;
+    }
+
+    .pullquote blockquote {
+      font-size: clamp(20px, 3vw, 34px);
+      font-weight: 300; line-height: 1.55;
+      letter-spacing: -0.01em;
+      max-width: 820px; margin: 0 auto;
+      color: rgba(255,255,255,0.85);
+      position: relative; z-index: 1;
+      text-align: center;
+    }
+
+    .pullquote cite {
+      display: block; margin-top: 28px;
+      font-size: 0.68rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--cyan);
+      font-style: normal; text-align: center;
+    }
+
+    /* ── WHAT WE PUBLISH — cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px; background: var(--border);
+    }
+
+    .card {
+      background: var(--black); padding: 44px 40px;
+      position: relative; overflow: hidden;
+      transition: background 0.3s; cursor: default;
+    }
+    .card:hover { background: var(--card-bg); }
+
+    .card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; width: 3px; height: 0;
+      background: linear-gradient(to bottom, #ff00ff, #00eaff);
+      transition: height 0.4s ease;
+    }
+    .card:hover::before { height: 100%; }
+
+    .card-icon { font-size: 2rem; margin-bottom: 18px; display: block; }
+
+    .card-tag {
+      font-size: 0.62rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--cyan); margin-bottom: 10px;
+    }
+
+    .card h3 {
+      font-size: 1.3rem; font-weight: 700;
+      margin-bottom: 12px; letter-spacing: -0.01em;
+    }
+
+    .card p {
+      font-size: 0.88rem; color: var(--dim); line-height: 1.75;
+    }
+
+    /* ── THE BOOK TEASER ── */
+    .book-section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 48px;
+    }
+
+    .book-wrap {
+      display: grid; grid-template-columns: 1fr 1.2fr;
+      gap: 80px; align-items: center;
+    }
+
+    .book-cover {
+      position: relative; aspect-ratio: 6/9;
+      background: linear-gradient(135deg, #0a0a0a 0%, #111 100%);
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 16px; padding: 40px;
+      overflow: hidden;
+    }
+
+    /* animated cover shimmer */
+    .book-cover::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg,
+        rgba(255,0,255,0.06) 0%,
+        rgba(0,234,255,0.06) 50%,
+        rgba(255,0,255,0.04) 100%);
+      animation: coverPulse 4s ease-in-out infinite;
+    }
+    @keyframes coverPulse {
+      0%,100% { opacity: 0.6; } 50% { opacity: 1; }
+    }
+
+    .book-cover-label {
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--cyan);
+      position: relative; z-index: 1;
+    }
+
+    .book-cover-title {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 800; line-height: 1.1;
+      text-align: center; letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      position: relative; z-index: 1;
+    }
+
+    .book-cover-sub {
+      font-size: 0.78rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--dim2);
+      text-align: center; position: relative; z-index: 1;
+    }
+
+    .book-cover-spine {
+      position: absolute; bottom: 24px;
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dim2);
+      z-index: 1;
+    }
+
+    .book-content h2 {
+      font-size: clamp(26px, 3.5vw, 42px);
+      font-weight: 700; line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .book-content .accent {
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .book-content p {
+      font-size: 0.95rem; color: var(--dim);
+      line-height: 1.85; margin-bottom: 16px;
+    }
+
+    .book-content p:last-of-type { margin-bottom: 36px; }
+
+    .book-status {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dim2);
+      margin-bottom: 32px;
+    }
+    .book-status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--magenta);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* ── ROYALTIES / TRANSPARENCY ── */
+    .transparency {
+      background: linear-gradient(135deg, rgba(255,0,255,0.04) 0%, rgba(0,234,255,0.04) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .transparency-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 48px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: start;
+    }
+
+    .transparency-left h2 {
+      font-size: clamp(26px, 3.5vw, 44px);
+      font-weight: 700; line-height: 1.1; margin-bottom: 20px;
+    }
+
+    .transparency-left p {
+      font-size: 0.95rem; color: var(--dim); line-height: 1.8;
+    }
+
+    .royalty-table {
+      display: flex; flex-direction: column; gap: 1px;
+      background: var(--border);
+    }
+
+    .royalty-row {
+      background: var(--black);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px;
+      transition: background 0.2s;
+    }
+    .royalty-row:hover { background: var(--card-bg); }
+
+    .royalty-row:first-child {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .royalty-label {
+      font-size: 0.72rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--dim);
+    }
+
+    .royalty-value {
+      font-size: 1.1rem; font-weight: 700;
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .royalty-note {
+      font-size: 0.68rem; color: var(--dim2);
+      margin-top: 12px; line-height: 1.6;
+    }
+
+    /* ── SUBMIT FORM ── */
+    .submit-section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 48px;
+    }
+
+    .submit-wrap {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 80px; align-items: start;
+    }
+
+    .submit-left h2 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700; line-height: 1.1; margin-bottom: 20px;
+    }
+
+    .submit-left p {
+      font-size: 0.95rem; color: var(--dim); line-height: 1.8;
+    }
+
+    .form { display: flex; flex-direction: column; gap: 14px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    .field label {
+      font-size: 0.62rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dim);
+    }
+
+    .field input, .field textarea, .field select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--white); font-family: inherit;
+      font-size: 0.95rem; padding: 12px 16px;
+      outline: none; transition: border-color 0.2s; width: 100%;
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: rgba(255,255,255,0.18); }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus { border-color: var(--cyan); }
+    .field textarea { resize: vertical; min-height: 100px; }
+    .field select option { background: #111; }
+
+    .form-footer {
+      display: flex; align-items: center;
+      gap: 24px; margin-top: 4px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      color: #000; font-family: inherit;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 14px 40px; border: none;
+      cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-submit:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    .form-note {
+      font-size: 0.78rem; color: rgba(255,255,255,0.22); line-height: 1.5;
+    }
+
+    /* success / error */
+    #form-success {
+      display: none; margin-top: 24px;
+      padding: 20px 24px;
+      border: 1px solid rgba(0,234,255,0.3);
+      background: rgba(0,234,255,0.05);
+    }
+    #form-success p {
+      font-size: 0.8rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--cyan); margin: 0;
+    }
+    #form-error {
+      display: none; margin-top: 24px;
+      padding: 20px 24px;
+      border: 1px solid rgba(255,0,255,0.3);
+      background: rgba(255,0,255,0.05);
+    }
+    #form-error p {
+      font-size: 0.8rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--magenta); margin: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 36px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--border);
+    }
+    .footer-brand {
+      font-size: 0.95rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .footer-note {
+      font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: rgba(255,255,255,0.18);
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .hero { padding: 130px 24px 80px; }
+      .section, .book-section, .submit-section { padding: 80px 24px; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .book-wrap { grid-template-columns: 1fr; gap: 48px; }
+      .transparency-inner { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+      .submit-wrap { grid-template-columns: 1fr; gap: 48px; }
+      .form-row { grid-template-columns: 1fr; }
+      .pullquote { padding: 60px 24px; }
+      footer { padding: 32px 24px; flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-brand">Zentura Media</a>
+    <a href="index.html" class="nav-back">← Back</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-eyebrow">Zentura Publishing</p>
+    <h1>A different kind<br>of <em>press.</em></h1>
+    <p class="hero-philosophy">
+      Zentura Publishing believes authors shouldn't need to master the entire
+      industry just to share their voice. We've built a modular, transparent,
+      author-first approach that replaces confusion with clarity and pressure with ease.
+    </p>
+    <p class="hero-reassurance">
+      This is a simpler path — one built on clarity, calm structure, and a human touch.
+      Real examples, a behind-the-scenes look at how a manuscript becomes a finished book,
+      and a steady guide at your side from draft to done.
+    </p>
+    <div class="hero-cta">
+      <a href="#submit" class="btn-primary">Submit your manuscript</a>
+      <a href="#what-we-publish" class="btn-ghost">What we publish</a>
+    </div>
+  </div>
+
+  <!-- PULL QUOTE -->
+  <div class="pullquote reveal">
+    <blockquote>
+      Writers shouldn't have to sound like anyone else.
+      Imperfect drafts are welcome here.
+      Voice comes first — always.
+      <cite>— The Zentura Publishing Philosophy</cite>
+    </blockquote>
+  </div>
+
+  <!-- WHAT WE OFFER -->
+  <div class="section reveal">
+    <p class="section-tag">How it works</p>
+    <h2 class="section-title">From draft to done — <span class="accent">without the overwhelm</span></h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Editorial Development</h3>
+        <p>We work with your manuscript as it is — voice intact. Developmental editing, structural feedback, and line editing available at every stage.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Design & Layout</h3>
+        <p>Professional cover design and interior layout that reflects your work's identity. Art books, illustrated titles, and text-forward works all handled in-house.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Print & Distribution</h3>
+        <p>ISBN registration, print-on-demand and short-run production, distribution through Ingram and Amazon. Your book, everywhere readers look.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Royalties & Reporting</h3>
+        <p>Quarterly statements showing every channel, every unit, every dollar. Clear, itemized, and yours to keep. No surprises, no fine print.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT WE PUBLISH -->
+  <div class="section reveal" id="what-we-publish">
+    <p class="section-tag">The list</p>
+    <h2 class="section-title">What we <span class="accent">publish</span></h2>
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">🎨</span>
+        <div class="card-tag">Our sweet spot</div>
+        <h3>Art Books & Monographs</h3>
+        <p>Studio artists who build a significant body of work become natural candidates for monographs, group anthologies, and thematic collections. Produced at lower cost because the artist relationship already exists.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📖</span>
+        <div class="card-tag">Illustrated works</div>
+        <h3>Children's Books & Poetry</h3>
+        <p>Illustrated children's books and poetry collections with original artwork — formats where visual identity and literary voice are inseparable. We understand both sides.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">✏️</span>
+        <div class="card-tag">Instructional</div>
+        <h3>Guides & Workshop Books</h3>
+        <p>Books authored by practitioners, teachers, and working creatives. If you teach it, you can publish it — with a partner who understands the craft behind the content.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📝</span>
+        <div class="card-tag">Open call</div>
+        <h3>Fiction & Nonfiction</h3>
+        <p>For authors seeking a more personal publishing relationship than large commercial presses offer. Local and regional interest titles especially welcome. If it matters to you, it matters to us.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE BOOK TEASER -->
+  <div class="book-section reveal">
+    <div class="book-wrap">
+      <div class="book-cover">
+        <div class="book-cover-label">Zentura Publishing</div>
+        <div class="book-cover-title">From Draft<br>to Done</div>
+        <div class="book-cover-sub">The Author's Guide to<br>Publishing Without Overwhelm</div>
+        <div class="book-cover-spine">Zentura · 2025</div>
+      </div>
+      <div class="book-content">
+        <p class="section-tag">Coming soon</p>
+        <h2>Our first <span class="accent">title.</span></h2>
+        <div class="book-status">
+          <span class="book-status-dot"></span>
+          In production
+        </div>
+        <p>
+          Publishing doesn't have to be complicated. Zentura Publishing was created
+          to give writers a straightforward, supportive path from first draft to
+          finished book.
+        </p>
+        <p>
+          This guide walks you through that path step by step, using clear graphics,
+          real-world examples, and a calm, no-drama approach that demystifies the
+          entire process. Whether you're writing your first book or your sixth,
+          Zentura offers a way to get your story into the world without the overwhelm.
+        </p>
+        <a href="#submit" class="btn-primary">Get notified at launch</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- OWNERSHIP PHILOSOPHY -->
+  <div class="transparency reveal">
+    <div class="transparency-inner">
+      <div class="transparency-left">
+        <p class="section-tag">A different deal</p>
+        <h2>You wrote it.<br><span class="accent">You own it.</span></h2>
+        <p>
+          The traditional publishing model takes a percentage of your sales forever.
+          We think that's backwards. Your work is yours — before, during, and after
+          we help you share it with the world.
+        </p>
+        <p style="margin-top:16px;">
+          Zentura makes money by being excellent at what we do, not by owning
+          a piece of you. Our income comes from the craft of publishing —
+          editing, design, production, distribution — not from a lifetime
+          cut of your royalties.
+        </p>
+        <p style="margin-top:16px;">
+          Take your book anywhere. Keep every dollar of your sales.
+          Come back because we're worth coming back to.
+        </p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:1px; background:var(--border);">
+        <div class="royalty-row" style="background:rgba(255,255,255,0.02); flex-direction:column; align-items:flex-start; gap:8px;">
+          <span class="royalty-label">The Zentura difference</span>
+        </div>
+        <div class="royalty-row">
+          <span class="royalty-label">Your rights</span>
+          <span class="royalty-value" style="font-size:0.9rem;">Always yours</span>
+        </div>
+        <div class="royalty-row">
+          <span class="royalty-label">Your sales income</span>
+          <span class="royalty-value" style="font-size:0.9rem;">You keep it</span>
+        </div>
+        <div class="royalty-row">
+          <span class="royalty-label">Distribution access</span>
+          <span class="royalty-value" style="font-size:0.9rem;">Ingram · Amazon · More</span>
+        </div>
+        <div class="royalty-row">
+          <span class="royalty-label">Lock-in</span>
+          <span class="royalty-value" style="font-size:0.9rem;">None</span>
+        </div>
+        <div class="royalty-row">
+          <span class="royalty-label">How we earn</span>
+          <span class="royalty-value" style="font-size:0.9rem;">Services, not sales</span>
+        </div>
+        <p class="royalty-note" style="padding:16px 24px; background:var(--black);">
+          Pricing details coming soon. We're still working out the model —
+          because we want to get it right, not just get it out.
+          Submit your manuscript now and we'll be in touch directly.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT FORM -->
+  <div class="submit-section" id="submit">
+    <div class="submit-wrap">
+      <div class="submit-left">
+        <p class="section-tag">Start here</p>
+        <h2>Submit your<br><span class="accent">manuscript.</span></h2>
+        <p>
+          Tell us about your project. We read every submission and respond to
+          every author personally. No form letters, no automated rejections.
+          Just a real conversation about your work.
+        </p>
+      </div>
+      <form class="form" id="publish-form">
+        <div class="form-row">
+          <div class="field">
+            <label>Your name</label>
+            <input type="text" name="name" placeholder="First & last" required />
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@example.com" required />
+          </div>
+        </div>
+        <div class="field">
+          <label>Type of work</label>
+          <select name="type">
+            <option value="" disabled selected>Select a category…</option>
+            <option>Art book / Monograph</option>
+            <option>Illustrated children's book</option>
+            <option>Poetry collection</option>
+            <option>Instructional / Workshop guide</option>
+            <option>Fiction</option>
+            <option>Nonfiction</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tell us about your project</label>
+          <textarea name="message" placeholder="Working title, genre, word count, where you are in the process, what you're looking for…"></textarea>
+        </div>
+        <div class="form-footer">
+          <button class="btn-submit" type="submit" id="pub-submit-btn">Send submission</button>
+          <p class="form-note">We respond to<br>every author personally</p>
+        </div>
+        <div id="form-success">
+          <p>✦ &nbsp; Submission received — we'll be in touch soon.</p>
+        </div>
+        <div id="form-error">
+          <p>✦ &nbsp; Something went wrong — please try again.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">Zentura Media</div>
+    <div class="footer-note">Author-first · Transparent · Vancouver, WA</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(r => io.observe(r));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Form submission — reuse the same Formspree endpoint
+    document.getElementById('publish-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      var btn = document.getElementById('pub-submit-btn');
+      var successMsg = document.getElementById('form-success');
+      var errorMsg   = document.getElementById('form-error');
+
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      successMsg.style.display = 'none';
+      errorMsg.style.display   = 'none';
+
+      try {
+        var res = await fetch('https://formspree.io/f/xreybqwg', {
+          method: 'POST',
+          body: new FormData(this),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          this.reset();
+          successMsg.style.display = 'block';
+          btn.textContent = 'Sent ✦';
+        } else {
+          throw new Error('Failed');
+        }
+      } catch(err) {
+        errorMsg.style.display = 'block';
+        btn.textContent = 'Send submission';
+        btn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>
