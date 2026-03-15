@@ -603,7 +603,7 @@
           <textarea name="message" placeholder="Number of performers, equipment you're bringing, what kind of session you're imagining…"></textarea>
         </div>
         <button class="btn-submit-artist" type="submit" id="artist-btn">Submit your act</button>
-        <div class="form-success" id="artist-success">✦ &nbsp; Submission received — we'll be in touch soon.</div>
+        <div class="form-success" id="artist-success">✦ &nbsp; Your email client should open pre-filled — just hit send and we'll be in touch.</div>
         <div class="form-error"   id="artist-error">✦ &nbsp; Something went wrong — please try again.</div>
       </form>
     </div>
@@ -641,7 +641,7 @@
           <textarea name="message" placeholder="How you heard about us, what you're hoping to see, anything at all…"></textarea>
         </div>
         <button class="btn-submit-fan" type="submit" id="fan-btn">Notify me</button>
-        <div class="form-success" id="fan-success">✦ &nbsp; You're on the list — we'll see you at the show.</div>
+        <div class="form-success" id="fan-success">✦ &nbsp; Your email client should open pre-filled — just hit send and we'll add you to the list.</div>
         <div class="form-error"   id="fan-error">✦ &nbsp; Something went wrong — please try again.</div>
       </form>
     </div>
@@ -671,43 +671,47 @@
       });
     });
 
-    // Form handler
-    async function handleForm(formId, btnId, successId, errorId) {
-      const form = document.getElementById(formId);
-      const btn  = document.getElementById(btnId);
-      const successMsg = document.getElementById(successId);
-      const errorMsg   = document.getElementById(errorId);
+    // Artist booking — mailto
+    document.getElementById('artist-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var artist  = document.querySelector('#artist-form [name="artist"]').value.trim();
+      var email   = document.querySelector('#artist-form [name="email"]').value.trim();
+      var genre   = document.querySelector('#artist-form [name="genre"]').value;
+      var message = document.querySelector('#artist-form [name="message"]').value.trim();
 
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        btn.textContent = 'Sending…';
-        btn.disabled = true;
-        successMsg.style.display = 'none';
-        errorMsg.style.display   = 'none';
+      var subject = encodeURIComponent('Grooves Booking — ' + (artist || 'Artist Inquiry'));
+      var body = encodeURIComponent(
+        'Artist / Band: ' + artist + '\n' +
+        'Reply-to: ' + email + '\n' +
+        'Genre / Style: ' + (genre || 'Not specified') + '\n\n' +
+        'About the act:\n' + message
+      );
 
-        try {
-          const res = await fetch('https://formspree.io/f/xreybqwg', {
-            method: 'POST',
-            body: new FormData(this),
-            headers: { 'Accept': 'application/json' }
-          });
-          if (res.ok) {
-            this.reset();
-            successMsg.style.display = 'block';
-            btn.textContent = 'Sent ✦';
-          } else {
-            throw new Error('Failed');
-          }
-        } catch(err) {
-          errorMsg.style.display = 'block';
-          btn.textContent = btn.id === 'artist-btn' ? 'Submit your act' : 'Notify me';
-          btn.disabled = false;
-        }
-      });
-    }
+      window.location.href = 'mailto:grooves@zentura.media?subject=' + subject + '&body=' + body;
+      document.getElementById('artist-success').style.display = 'block';
+      document.getElementById('artist-btn').textContent = 'Opening your email ✦';
+    });
 
-    handleForm('artist-form', 'artist-btn', 'artist-success', 'artist-error');
-    handleForm('fan-form',    'fan-btn',    'fan-success',    'fan-error');
+    // Fan notification — mailto
+    document.getElementById('fan-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var name    = document.querySelector('#fan-form [name="name"]').value.trim();
+      var email   = document.querySelector('#fan-form [name="email"]').value.trim();
+      var genre   = document.querySelector('#fan-form [name="genre"]').value;
+      var message = document.querySelector('#fan-form [name="message"]').value.trim();
+
+      var subject = encodeURIComponent('Show Notifications — ' + (name || 'Fan Signup'));
+      var body = encodeURIComponent(
+        'Name: ' + name + '\n' +
+        'Reply-to: ' + email + '\n' +
+        'Music preference: ' + (genre || 'Not specified') + '\n\n' +
+        (message ? 'Notes:\n' + message : '')
+      );
+
+      window.location.href = 'mailto:grooves@zentura.media?subject=' + subject + '&body=' + body;
+      document.getElementById('fan-success').style.display = 'block';
+      document.getElementById('fan-btn').textContent = 'Opening your email ✦';
+    });
   </script>
 
 </body>

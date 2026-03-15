@@ -802,7 +802,7 @@
           <p class="form-note">We respond to<br>every author personally</p>
         </div>
         <div id="form-success">
-          <p>✦ &nbsp; Submission received — we'll be in touch soon.</p>
+          <p>✦ &nbsp; Your email client should open with everything pre-filled — just hit send. Feel free to attach a sample or excerpt.</p>
         </div>
         <div id="form-error">
           <p>✦ &nbsp; Something went wrong — please try again.</p>
@@ -834,36 +834,27 @@
       });
     });
 
-    // Form submission — reuse the same Formspree endpoint
-    document.getElementById('publish-form').addEventListener('submit', async function(e) {
+    // Manuscript submission — mailto
+    document.getElementById('publish-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      var btn = document.getElementById('pub-submit-btn');
-      var successMsg = document.getElementById('form-success');
-      var errorMsg   = document.getElementById('form-error');
+      var name    = document.querySelector('[name="name"]').value.trim();
+      var email   = document.querySelector('[name="email"]').value.trim();
+      var type    = document.querySelector('[name="type"]').value;
+      var message = document.querySelector('[name="message"]').value.trim();
 
-      btn.textContent = 'Sending…';
-      btn.disabled = true;
-      successMsg.style.display = 'none';
-      errorMsg.style.display   = 'none';
+      var subject = encodeURIComponent('Manuscript Submission — ' + (type || 'General') );
+      var body = encodeURIComponent(
+        'Name: ' + name + '\n' +
+        'Reply-to: ' + email + '\n' +
+        'Type of work: ' + (type || 'Not specified') + '\n\n' +
+        'About the project:\n' + message + '\n\n' +
+        '— Feel free to attach a sample or excerpt to this email.'
+      );
 
-      try {
-        var res = await fetch('https://formspree.io/f/xreybqwg', {
-          method: 'POST',
-          body: new FormData(this),
-          headers: { 'Accept': 'application/json' }
-        });
-        if (res.ok) {
-          this.reset();
-          successMsg.style.display = 'block';
-          btn.textContent = 'Sent ✦';
-        } else {
-          throw new Error('Failed');
-        }
-      } catch(err) {
-        errorMsg.style.display = 'block';
-        btn.textContent = 'Send submission';
-        btn.disabled = false;
-      }
+      window.location.href = 'mailto:grooves@zentura.media?subject=' + subject + '&body=' + body;
+
+      document.getElementById('form-success').style.display = 'block';
+      document.getElementById('pub-submit-btn').textContent = 'Opening your email ✦';
     });
   </script>
 
