@@ -601,15 +601,9 @@ footer {
       </div>
 
   <form class="form" id="commission-form">
-    <div class="form-row">
-      <div class="field">
-        <label>Your name</label>
-        <input type="text" name="name" placeholder="First & last" required />
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="you@example.com" required />
-      </div>
+    <div class="field">
+      <label>Your name</label>
+      <input type="text" name="name" placeholder="First & last" required />
     </div>
 
     <div class="field">
@@ -629,16 +623,12 @@ footer {
       <textarea name="message" placeholder="Tell us about the subject, style, size, any references you love…"></textarea>
     </div>
 
-    <div class="upload-area">
-      📎 &nbsp; Reference photos — drag & drop or click to browse
-    </div>
-
     <div class="form-footer">
       <button class="btn-submit" type="submit" id="submit-btn">Send inquiry</button>
       <p class="form-note">We'll reply within<br>2–3 business days</p>
     </div>
   <div id="form-success" style="display:none; margin-top:24px; padding:20px 24px; border:1px solid rgba(0,234,255,0.3); background:rgba(0,234,255,0.05);">
-      <p style="font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:#00eaff; margin:0;">✦ &nbsp; Your email client should open pre-filled — just hit send. Attach any reference photos right in the email.</p>
+      <p style="font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:#00eaff; margin:0;">✦ &nbsp; Inquiry received — we'll be in touch within 2–3 days.</p>
     </div>
     <div id="form-error" style="display:none; margin-top:24px; padding:20px 24px; border:1px solid rgba(255,0,255,0.3); background:rgba(255,0,255,0.05);">
       <p style="font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:#ff00ff; margin:0;">✦ &nbsp; Something went wrong — please try again or email us directly.</p>
@@ -673,21 +663,19 @@ footer {
     // Commission inquiry — mailto
     document.getElementById('commission-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      var name    = document.querySelector('#commission-form [name="name"]').value.trim();
-      var email   = document.querySelector('#commission-form [name="email"]').value.trim();
-      var type    = document.querySelector('#commission-form [name="type"]').value;
-      var message = document.querySelector('#commission-form [name="message"]').value.trim();
+      var name    = document.querySelector('#commission-form input[name="name"]').value.trim();
+      var type    = document.querySelector('#commission-form select[name="type"]').value;
+      var message = document.querySelector('#commission-form textarea[name="message"]').value.trim();
 
-     var name = document.querySelector('#commission-form input[name="name"]').value.trim();
+      var subject = encodeURIComponent('Commission Inquiry — ' + name + ' — ' + (type || 'Custom piece'));
+      var body = encodeURIComponent(
         'Name: ' + name + '\n' +
-        'Reply-to: ' + email + '\n' +
         'Type of piece: ' + (type || 'Not specified') + '\n\n' +
         'Description:\n' + message + '\n\n' +
         '— You can attach reference photos directly to this email.'
       );
 
       window.location.href = 'mailto:grooves@zentura.media?subject=' + subject + '&body=' + body;
-
       document.getElementById('form-success').style.display = 'block';
       document.getElementById('submit-btn').textContent = 'Opening your email ✦';
     });

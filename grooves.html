@@ -567,10 +567,8 @@
     </div>
   </div>
 
-  <!-- DUAL FORMS -->
+  <!-- ARTIST FORM -->
   <div class="forms-section" id="book-your-act">
-
-    <!-- ARTIST FORM -->
     <div class="form-panel">
       <p class="form-panel-tag artist-tag">For artists</p>
       <h2>Book your <span class="accent">act.</span></h2>
@@ -579,10 +577,6 @@
         <div class="field">
           <label>Artist / Band name</label>
           <input type="text" name="artist" placeholder="Your name or act" required />
-        </div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" name="email" placeholder="you@example.com" required />
         </div>
         <div class="field">
           <label>Genre / Style</label>
@@ -604,48 +598,8 @@
         </div>
         <button class="btn-submit-artist" type="submit" id="artist-btn">Submit your act</button>
         <div class="form-success" id="artist-success">✦ &nbsp; Your email client should open pre-filled — just hit send and we'll be in touch.</div>
-        <div class="form-error"   id="artist-error">✦ &nbsp; Something went wrong — please try again.</div>
       </form>
     </div>
-
-    <!-- FAN FORM -->
-    <div class="form-panel" style="background:rgba(255,255,255,0.02);">
-      <p class="form-panel-tag fan-tag">For fans</p>
-      <h2>Find a <span style="background:linear-gradient(90deg,#00eaff,#ff00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">show.</span></h2>
-      <p>Get notified when new sessions are announced. We keep the list small and the shows intimate — sign up and you'll be first to know.</p>
-      <form class="form" id="fan-form">
-        <div class="field">
-          <label>Your name</label>
-          <input type="text" name="name" placeholder="First & last" required />
-        </div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" name="email" placeholder="you@example.com" required />
-        </div>
-        <div class="field">
-          <label>What are you into?</label>
-          <select name="genre">
-            <option value="" disabled selected>Select a preference…</option>
-            <option>Everything — surprise me</option>
-            <option>Jazz / Blues</option>
-            <option>Folk / Acoustic</option>
-            <option>Rock / Indie</option>
-            <option>Electronic / Ambient</option>
-            <option>Hip Hop / Spoken Word</option>
-            <option>Classical / Orchestral</option>
-            <option>World Music</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Anything else?</label>
-          <textarea name="message" placeholder="How you heard about us, what you're hoping to see, anything at all…"></textarea>
-        </div>
-        <button class="btn-submit-fan" type="submit" id="fan-btn">Notify me</button>
-        <div class="form-success" id="fan-success">✦ &nbsp; Your email client should open pre-filled — just hit send and we'll add you to the list.</div>
-        <div class="form-error"   id="fan-error">✦ &nbsp; Something went wrong — please try again.</div>
-      </form>
-    </div>
-
   </div>
 
   <!-- FOOTER -->
@@ -674,15 +628,13 @@
     // Artist booking — mailto
     document.getElementById('artist-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      var artist  = document.querySelector('#artist-form [name="artist"]').value.trim();
-      var email   = document.querySelector('#artist-form [name="email"]').value.trim();
-      var genre   = document.querySelector('#artist-form [name="genre"]').value;
-      var message = document.querySelector('#artist-form [name="message"]').value.trim();
+      var artist  = document.querySelector('#artist-form input[name="artist"]').value.trim();
+      var genre   = document.querySelector('#artist-form select[name="genre"]').value;
+      var message = document.querySelector('#artist-form textarea[name="message"]').value.trim();
 
-      var name = document.querySelector('#artist-form input[name="artist"]').value.trim();
+      var subject = encodeURIComponent('Grooves Booking — ' + (artist || 'Artist Inquiry') + ' — ' + (genre || 'Genre TBD'));
       var body = encodeURIComponent(
         'Artist / Band: ' + artist + '\n' +
-        'Reply-to: ' + email + '\n' +
         'Genre / Style: ' + (genre || 'Not specified') + '\n\n' +
         'About the act:\n' + message
       );
@@ -690,27 +642,6 @@
       window.location.href = 'mailto:grooves@zentura.media?subject=' + subject + '&body=' + body;
       document.getElementById('artist-success').style.display = 'block';
       document.getElementById('artist-btn').textContent = 'Opening your email ✦';
-    });
-
-    // Fan notification — mailto
-    document.getElementById('fan-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var name    = document.querySelector('#fan-form [name="name"]').value.trim();
-      var email   = document.querySelector('#fan-form [name="email"]').value.trim();
-      var genre   = document.querySelector('#fan-form [name="genre"]').value;
-      var message = document.querySelector('#fan-form [name="message"]').value.trim();
-
-      var name = document.querySelector('#artist-form input[name="artist"]').value.trim();
-      var body = encodeURIComponent(
-        'Name: ' + name + '\n' +
-        'Reply-to: ' + email + '\n' +
-        'Music preference: ' + (genre || 'Not specified') + '\n\n' +
-        (message ? 'Notes:\n' + message : '')
-      );
-
-      window.location.href = 'mailto:grooves@zentura.media?subject=' + subject + '&body=' + body;
-      document.getElementById('fan-success').style.display = 'block';
-      document.getElementById('fan-btn').textContent = 'Opening your email ✦';
     });
   </script>
 
