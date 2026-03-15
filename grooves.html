@@ -679,7 +679,7 @@
       var genre   = document.querySelector('#artist-form [name="genre"]').value;
       var message = document.querySelector('#artist-form [name="message"]').value.trim();
 
-      var subject = encodeURIComponent('Grooves Booking — ' + (artist || 'Artist Inquiry'));
+      var name = document.querySelector('#artist-form input[name="artist"]').value.trim();
       var body = encodeURIComponent(
         'Artist / Band: ' + artist + '\n' +
         'Reply-to: ' + email + '\n' +
@@ -700,7 +700,7 @@
       var genre   = document.querySelector('#fan-form [name="genre"]').value;
       var message = document.querySelector('#fan-form [name="message"]').value.trim();
 
-      var subject = encodeURIComponent('Show Notifications — ' + name);
+      var name = document.querySelector('#artist-form input[name="artist"]').value.trim();
       var body = encodeURIComponent(
         'Name: ' + name + '\n' +
         'Reply-to: ' + email + '\n' +
