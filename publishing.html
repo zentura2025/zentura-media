@@ -837,12 +837,12 @@
     // Manuscript submission — mailto
     document.getElementById('publish-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      var name    = document.querySelector('[name="name"]').value.trim();
-      var email   = document.querySelector('[name="email"]').value.trim();
-      var type    = document.querySelector('[name="type"]').value;
-      var message = document.querySelector('[name="message"]').value.trim();
+      var name    = document.querySelector('#publish-form input[name="name"]').value.trim();
+      var email   = document.querySelector('#publish-form input[name="email"]').value.trim();
+      var type    = document.querySelector('#publish-form select[name="type"]').value;
+      var message = document.querySelector('#publish-form textarea[name="message"]').value.trim();
 
-    var name = document.querySelector('#publish-form input[name="name"]').value.trim();
+      var subject = encodeURIComponent('Manuscript Submission — ' + name + ' — ' + (type || 'General'));
       var body = encodeURIComponent(
         'Name: ' + name + '\n' +
         'Reply-to: ' + email + '\n' +
