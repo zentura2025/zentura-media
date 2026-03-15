@@ -678,8 +678,7 @@ footer {
       var type    = document.querySelector('#commission-form [name="type"]').value;
       var message = document.querySelector('#commission-form [name="message"]').value.trim();
 
-     var subject = encodeURIComponent('Commission Inquiry — ' + name + ' — ' + (type || 'Custom piece'));
-      var body = encodeURIComponent(
+     var name = document.querySelector('#commission-form input[name="name"]').value.trim();
         'Name: ' + name + '\n' +
         'Reply-to: ' + email + '\n' +
         'Type of piece: ' + (type || 'Not specified') + '\n\n' +
