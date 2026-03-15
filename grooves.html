@@ -700,7 +700,7 @@
       var genre   = document.querySelector('#fan-form [name="genre"]').value;
       var message = document.querySelector('#fan-form [name="message"]').value.trim();
 
-      var subject = encodeURIComponent('Show Notifications — ' + (name || 'Fan Signup'));
+      var subject = encodeURIComponent('Show Notifications — ' + name);
       var body = encodeURIComponent(
         'Name: ' + name + '\n' +
         'Reply-to: ' + email + '\n' +
