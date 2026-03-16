@@ -331,6 +331,127 @@ section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
   line-height: 1.75;
 }
 
+/* ── VEHICLE WRAPS ── */
+#wraps {
+  max-width: 100%;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+
+.wraps-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 48px;
+}
+
+.wraps-inner .section-tag { color: var(--cyan); }
+
+.wrap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-top: 48px;
+}
+
+.wrap-card {
+  background: var(--black);
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  transition: background 0.3s;
+}
+.wrap-card:hover { background: var(--card-bg); }
+
+.wrap-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff00ff, #00eaff);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+.wrap-card:hover::before { transform: scaleX(1); }
+
+.wrap-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: rgba(255,255,255,0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.wrap-placeholder-icon {
+  font-size: 2.5rem;
+  opacity: 0.25;
+}
+
+.wrap-placeholder-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.15);
+}
+
+.wrap-card-body {
+  padding: 28px 28px 32px;
+}
+
+.wrap-vehicle {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  margin-bottom: 8px;
+}
+
+.wrap-card-body h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.wrap-card-body p {
+  font-size: 0.85rem;
+  color: var(--dim);
+  line-height: 1.7;
+}
+
+.wraps-note {
+  margin-top: 48px;
+  padding: 32px 40px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  background: rgba(255,255,255,0.02);
+}
+
+.wraps-note p {
+  font-size: 0.9rem;
+  color: var(--dim);
+  line-height: 1.75;
+  max-width: 600px;
+}
+
+.wraps-note p strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .wrap-grid { grid-template-columns: 1fr; }
+  .wraps-inner { padding: 80px 24px; }
+  .wraps-note { flex-direction: column; align-items: flex-start; }
+}
+
 /* ── COMMISSION ── */
 #commission {
   max-width: 100%;
@@ -519,11 +640,12 @@ footer {
 <p class="hero-sub">
   Nothing here exists until you ask for it.
   Every piece is made by hand, made to order,
-  and made for you.
+  and made for you — from stickers and studio art
+  to full vehicle wraps.
 </p>
 <div class="hero-cta">
   <a href="#commission" class="btn-primary">Commission a piece</a>
-  <a href="gallery.html" class="btn-ghost">See what we make</a>
+  <a href="#wraps" class="btn-ghost">Vehicle wraps ↓</a>
 </div>
 
   </div>
@@ -582,13 +704,68 @@ footer {
         <p>Paintings, mixed media, and wall pieces. Commission something specific or ask about available originals from the studio.</p>
       </div>
       <div class="card">
-        <span class="card-icon">✦</span>
-        <div class="card-tag">Open call</div>
-        <h3>Something Else?</h3>
-        <p>The sky is the limit. If you can imagine it, we want to hear about it. The studio is a place where new ideas are always welcome.</p>
+        <span class="card-icon">🚗</span>
+        <div class="card-tag">Full scale</div>
+        <h3>Vehicle Wraps</h3>
+        <p>Original anime-style art designed for your car, truck, or SUV. Chloe designs the wrap concept — you take it to your installer. Your vehicle becomes the canvas.</p>
       </div>
     </div>
   </section>
+
+  <!-- VEHICLE WRAPS -->
+
+  <div id="wraps" class="reveal">
+    <div class="wraps-inner">
+      <p class="section-tag">Art that moves</p>
+      <h2 class="section-title">Vehicle <span class="accent">wraps</span></h2>
+
+      <div class="wrap-grid">
+
+        <div class="wrap-card">
+          <div class="wrap-placeholder">
+            <div class="wrap-placeholder-icon">🚗</div>
+            <div class="wrap-placeholder-label">Mockup coming soon</div>
+          </div>
+          <div class="wrap-card-body">
+            <div class="wrap-vehicle">Compact · Sedan</div>
+            <h3>The Subtle Statement</h3>
+            <p>Proof that unexpected vehicles make the boldest canvases. Original anime art on a daily driver — turns every parking lot into a gallery.</p>
+          </div>
+        </div>
+
+        <div class="wrap-card">
+          <div class="wrap-placeholder">
+            <div class="wrap-placeholder-icon">🚙</div>
+            <div class="wrap-placeholder-label">Mockup coming soon</div>
+          </div>
+          <div class="wrap-card-body">
+            <div class="wrap-vehicle">Sport Coupe</div>
+            <h3>The Character Study</h3>
+            <p>A sport coupe already has personality. Chloe's style adds a story — a character, a world, an identity that moves with you.</p>
+          </div>
+        </div>
+
+        <div class="wrap-card">
+          <div class="wrap-placeholder">
+            <div class="wrap-placeholder-icon">🏎️</div>
+            <div class="wrap-placeholder-label">Mockup coming soon</div>
+          </div>
+          <div class="wrap-card-body">
+            <div class="wrap-vehicle">Convertible · Muscle</div>
+            <h3>The Full Commitment</h3>
+            <p>When the top goes down the art goes everywhere. A convertible wrap is a moving mural. No half measures — this one owns every road it's on.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="wraps-note">
+        <p>Every wrap starts as an <strong>original design commission.</strong> Chloe creates the art concept for your specific vehicle — you handle printing and installation with your preferred wrap shop. <strong>You own the design file.</strong> No templates. No stock art. One vehicle, one artist, one piece.</p>
+        <a href="#commission" class="btn-primary" style="white-space:nowrap;">Start your wrap</a>
+      </div>
+
+    </div>
+  </div>
 
   <!-- COMMISSION FORM -->
 
@@ -614,6 +791,7 @@ footer {
         <option>Pet figurine (sculpted)</option>
         <option>Custom sticker set</option>
         <option>Original artwork</option>
+        <option>Vehicle wrap design</option>
         <option>Something else</option>
       </select>
     </div>
