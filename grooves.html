@@ -663,26 +663,6 @@
 ">
   🎵 Music: OFF
 </div>
-
-<script>
-  const audio = document.getElementById('bg-music');
-  const toggle = document.getElementById('music-toggle');
-  let playing = false;
-
-  toggle.addEventListener('click', () => {
-    if (!playing) {
-      audio.volume = 0.25; // gentle
-      audio.play();
-      toggle.textContent = "🎵 Music: ON";
-      playing = true;
-    } else {
-      audio.pause();
-      toggle.textContent = "🎵 Music: OFF";
-      playing = false;
-    }
-  });
-</script>
-
 <script>
   const audio = document.getElementById('bg-music');
   const toggle = document.getElementById('music-toggle');
@@ -743,7 +723,3 @@
     }
   });
 </script>
-
-
-</body>
-</html>
