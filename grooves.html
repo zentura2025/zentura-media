@@ -683,5 +683,67 @@
   });
 </script>
 
+<script>
+  const audio = document.getElementById('bg-music');
+  const toggle = document.getElementById('music-toggle');
+  let playing = false;
+
+  // Fade settings
+  const fadeInTime = 2000;  // 2 seconds
+  const fadeOutTime = 2000; // 2 seconds
+
+  function fadeIn() {
+    audio.volume = 0;
+    const step = 0.01;
+    const interval = fadeInTime * step;
+
+    const fade = setInterval(() => {
+      if (audio.volume < 0.25) {
+        audio.volume += step;
+      } else {
+        clearInterval(fade);
+      }
+    }, interval);
+  }
+
+  function fadeOut(callback) {
+    const step = 0.01;
+    const interval = fadeOutTime * step;
+
+    const fade = setInterval(() => {
+      if (audio.volume > 0) {
+        audio.volume -= step;
+      } else {
+        clearInterval(fade);
+        if (callback) callback();
+      }
+    }, interval);
+  }
+
+  // Loop smoothing: fade out before restart
+  audio.addEventListener('ended', () => {
+    fadeOut(() => {
+      audio.currentTime = 0;
+      audio.play();
+      fadeIn();
+    });
+  });
+
+  toggle.addEventListener('click', () => {
+    if (!playing) {
+      audio.currentTime = 0;
+      audio.play();
+      fadeIn();
+      toggle.textContent = "🎵 Music: ON";
+      playing = true;
+    } else {
+      fadeOut(() => audio.pause());
+      toggle.textContent = "🎵 Music: OFF";
+      playing = false;
+    }
+  });
+</script>
+
+
 </body>
 </html>
