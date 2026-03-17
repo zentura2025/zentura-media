@@ -717,7 +717,11 @@
       toggle.textContent = "🎵 Music: ON";
       playing = true;
     } else {
-      fadeOut(() => audio.pause());
+   fadeOut(() => {
+  audio.pause();
+  audio.volume = 0;  // reset volume so next start is clean
+});
+
       toggle.textContent = "🎵 Music: OFF";
       playing = false;
     }
