@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zentura Grooves — Live Sessions</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan:    #00eaff;
+      --magenta: #ff00ff;
+      --amber:   #ffb300;
+      --black:   #000;
+      --white:   #fff;
+      --dim:     rgba(255,255,255,0.5);
+      --dim2:    rgba(255,255,255,0.22);
+      --card-bg: rgba(255,255,255,0.03);
+      --border:  rgba(255,255,255,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* scanline */
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none; z-index: 999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 20px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    }
+    .nav-brand {
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-back {
+      font-size: 0.8rem; color: var(--dim);
+      text-decoration: none; letter-spacing: 0.1em;
+      text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--cyan); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 140px 48px 100px;
+      position: relative; overflow: hidden;
+    }
+
+    /* Stage lighting effect */
+    .hero-lights {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .light {
+      position: absolute; border-radius: 50%;
+      filter: blur(100px);
+    }
+    .light-1 {
+      width: 500px; height: 700px;
+      background: radial-gradient(ellipse, rgba(255,179,0,0.08) 0%, transparent 70%);
+      top: -200px; left: 10%;
+      animation: sway1 8s ease-in-out infinite;
+    }
+    .light-2 {
+      width: 400px; height: 600px;
+      background: radial-gradient(ellipse, rgba(255,0,255,0.07) 0%, transparent 70%);
+      top: -150px; right: 15%;
+      animation: sway2 10s ease-in-out infinite;
+    }
+    .light-3 {
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(0,234,255,0.05) 0%, transparent 70%);
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      animation: pulse 6s ease-in-out infinite;
+    }
+    /* Center spot */
+    .light-spot {
+      position: absolute;
+      width: 300px; height: 500px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.04) 0%, transparent 65%);
+      top: 0; left: 50%; transform: translateX(-50%);
+      animation: spot 12s ease-in-out infinite;
+    }
+
+    @keyframes sway1 { 0%,100%{transform:rotate(-8deg)} 50%{transform:rotate(8deg)} }
+    @keyframes sway2 { 0%,100%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} }
+    @keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+    @keyframes spot  { 0%,100%{transform:translateX(-60%)} 50%{transform:translateX(-40%)} }
+
+    /* Sound wave bars */
+    .soundwave {
+      display: flex; align-items: center; justify-content: center;
+      gap: 4px; margin-bottom: 32px; height: 32px;
+      opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+    .bar {
+      width: 3px; border-radius: 2px;
+      background: linear-gradient(to top, #ff00ff, #00eaff);
+      animation: wave 1.2s ease-in-out infinite;
+    }
+    .bar:nth-child(1)  { height: 8px;  animation-delay: 0.0s; }
+    .bar:nth-child(2)  { height: 18px; animation-delay: 0.1s; }
+    .bar:nth-child(3)  { height: 28px; animation-delay: 0.2s; }
+    .bar:nth-child(4)  { height: 22px; animation-delay: 0.3s; }
+    .bar:nth-child(5)  { height: 32px; animation-delay: 0.15s; }
+    .bar:nth-child(6)  { height: 24px; animation-delay: 0.25s; }
+    .bar:nth-child(7)  { height: 16px; animation-delay: 0.35s; }
+    .bar:nth-child(8)  { height: 28px; animation-delay: 0.05s; }
+    .bar:nth-child(9)  { height: 20px; animation-delay: 0.2s; }
+    .bar:nth-child(10) { height: 12px; animation-delay: 0.3s; }
+    .bar:nth-child(11) { height: 26px; animation-delay: 0.1s; }
+    .bar:nth-child(12) { height: 18px; animation-delay: 0.0s; }
+
+    @keyframes wave {
+      0%,100% { transform: scaleY(0.4); opacity: 0.5; }
+      50%      { transform: scaleY(1);   opacity: 1; }
+    }
+
+    .hero-eyebrow {
+      font-size: 0.68rem; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--amber);
+      margin-bottom: 20px; position: relative;
+      opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards;
+    }
+
+    .hero h1 {
+      font-size: clamp(52px, 9vw, 120px);
+      font-weight: 900; line-height: 0.95;
+      letter-spacing: -0.03em; position: relative;
+      opacity: 0; animation: fadeUp 0.9s ease 0.4s forwards;
+    }
+
+    .hero h1 .line1 {
+      display: block;
+      background: linear-gradient(90deg, #ffb300, #ff00ff, #00eaff);
+      background-size: 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmer 6s linear 1s infinite;
+    }
+    .hero h1 .line2 {
+      display: block;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 1.5px rgba(255,255,255,0.2);
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 300; letter-spacing: 0.18em;
+      margin-top: 8px;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem; color: var(--dim);
+      max-width: 520px; line-height: 1.8;
+      margin: 32px auto 52px; position: relative;
+      opacity: 0; animation: fadeUp 0.9s ease 0.6s forwards;
+    }
+
+    /* Dual CTA */
+    .hero-cta {
+      display: flex; gap: 0; flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0; animation: fadeUp 0.9s ease 0.8s forwards;
+    }
+
+    .btn-artist {
+      background: linear-gradient(90deg, #ffb300, #ff00ff);
+      color: #000; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      text-decoration: none; padding: 16px 40px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-artist:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    .btn-fan {
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--dim); text-decoration: none;
+      padding: 16px 40px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-fan:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ── SHARED ── */
+    .section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 48px;
+    }
+
+    .section-tag {
+      font-size: 0.65rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--magenta);
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: clamp(26px, 4vw, 46px);
+      font-weight: 700; line-height: 1.1; margin-bottom: 48px;
+    }
+    .accent {
+      background: linear-gradient(90deg, #ffb300, #ff00ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    /* ── WHAT WE PROVIDE ── */
+    .provides {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+    }
+
+    .provide {
+      background: var(--black); padding: 40px 28px;
+      transition: background 0.3s;
+    }
+    .provide:hover { background: var(--card-bg); }
+
+    .provide-icon { font-size: 2rem; margin-bottom: 18px; display: block; }
+
+    .provide h3 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 10px; letter-spacing: 0.03em;
+    }
+
+    .provide p {
+      font-size: 0.85rem; color: var(--dim); line-height: 1.7;
+    }
+
+    /* ── CALENDAR ── */
+    .calendar-section {
+      background: linear-gradient(135deg, rgba(255,179,0,0.04) 0%, rgba(255,0,255,0.04) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .calendar-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 48px;
+    }
+
+    .shows-grid {
+      display: flex; flex-direction: column; gap: 1px;
+      background: var(--border); margin-bottom: 48px;
+    }
+
+    .show-row {
+      background: var(--black);
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      align-items: center; gap: 32px;
+      padding: 24px 28px;
+      transition: background 0.2s; cursor: default;
+    }
+    .show-row:hover { background: var(--card-bg); }
+
+    .show-row.header {
+      background: rgba(255,255,255,0.02);
+      cursor: default;
+    }
+    .show-row.header:hover { background: rgba(255,255,255,0.02); }
+
+    .show-date {
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--amber);
+      line-height: 1.4;
+    }
+
+    .show-info h3 {
+      font-size: 1rem; font-weight: 600; margin-bottom: 4px;
+    }
+
+    .show-info p {
+      font-size: 0.78rem; color: var(--dim); letter-spacing: 0.05em;
+    }
+
+    .show-tag {
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 6px 14px;
+      border: 1px solid var(--border); color: var(--dim2);
+      white-space: nowrap;
+    }
+    .show-tag.open { border-color: rgba(0,234,255,0.3); color: var(--cyan); }
+    .show-tag.soon { border-color: rgba(255,179,0,0.3); color: var(--amber); }
+    .show-tag.past { opacity: 0.4; }
+
+    .calendar-note {
+      font-size: 0.78rem; color: var(--dim2);
+      text-align: center; line-height: 1.6;
+    }
+
+    /* ── DUAL FORMS ── */
+    .forms-section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 48px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border);
+    }
+
+    .form-panel {
+      background: var(--black); padding: 60px 48px;
+    }
+
+    .form-panel-tag {
+      font-size: 0.62rem; letter-spacing: 0.25em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .form-panel-tag.artist-tag { color: var(--amber); }
+    .form-panel-tag.fan-tag    { color: var(--cyan); }
+
+    .form-panel h2 {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 700; line-height: 1.1; margin-bottom: 14px;
+    }
+
+    .form-panel p {
+      font-size: 0.88rem; color: var(--dim);
+      line-height: 1.8; margin-bottom: 32px;
+    }
+
+    .form { display: flex; flex-direction: column; gap: 12px; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    .field label {
+      font-size: 0.62rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dim);
+    }
+
+    .field input, .field textarea, .field select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--white); font-family: inherit;
+      font-size: 0.92rem; padding: 12px 16px;
+      outline: none; transition: border-color 0.2s; width: 100%;
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: rgba(255,255,255,0.18); }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus { border-color: var(--cyan); }
+    .field textarea { resize: vertical; min-height: 90px; }
+    .field select option { background: #111; }
+
+    .btn-submit-artist {
+      background: linear-gradient(90deg, #ffb300, #ff00ff);
+      color: #000; font-family: inherit;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 14px 32px; border: none;
+      cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+      margin-top: 4px; align-self: flex-start;
+    }
+    .btn-submit-artist:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    .btn-submit-fan {
+      background: linear-gradient(90deg, #00eaff, #ff00ff);
+      color: #000; font-family: inherit;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 14px 32px; border: none;
+      cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+      margin-top: 4px; align-self: flex-start;
+    }
+    .btn-submit-fan:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    .form-success {
+      display: none; margin-top: 16px;
+      padding: 16px 20px;
+      border: 1px solid rgba(0,234,255,0.3);
+      background: rgba(0,234,255,0.05);
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--cyan);
+    }
+    .form-error {
+      display: none; margin-top: 16px;
+      padding: 16px 20px;
+      border: 1px solid rgba(255,0,255,0.3);
+      background: rgba(255,0,255,0.05);
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--magenta);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 36px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--border);
+    }
+    .footer-brand {
+      font-size: 0.95rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: linear-gradient(90deg, #ff00ff, #00eaff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .footer-note {
+      font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: rgba(255,255,255,0.18);
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .hero { padding: 130px 24px 80px; }
+      .section { padding: 80px 24px; }
+      .provides { grid-template-columns: 1fr 1fr; }
+      .calendar-inner { padding: 80px 24px; }
+      .show-row { grid-template-columns: 80px 1fr; }
+      .show-tag { display: none; }
+      .forms-section { grid-template-columns: 1fr; padding: 0; }
+      .form-panel { padding: 60px 24px; }
+      footer { padding: 32px 24px; flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-brand">Zentura Media</a>
+    <a href="index.html" class="nav-back">← Back</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-lights">
+      <div class="light light-1"></div>
+      <div class="light light-2"></div>
+      <div class="light light-3"></div>
+      <div class="light-spot"></div>
+    </div>
+
+    <div class="soundwave">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+
+    <p class="hero-eyebrow">Zentura Grooves — Live Sessions</p>
+    <h1>
+      <span class="line1">The Stage</span>
+      <span class="line2">is yours.</span>
+    </h1>
+    <p class="hero-sub">
+      We bring the stage, the lights, the sound, and the room.
+      You bring the music. Together we make something worth remembering —
+      and worth sharing with the world.
+    </p>
+    <div class="hero-cta">
+      <a href="#book-your-act" class="btn-artist">Book your act</a>
+      <a href="#find-a-show" class="btn-fan">Find a show</a>
+    </div>
+  </div>
+
+  <!-- WHAT WE PROVIDE -->
+  <div class="section reveal">
+    <p class="section-tag">What we bring</p>
+    <h2 class="section-title">You focus on the <span class="accent">music.</span></h2>
+    <div class="provides">
+      <div class="provide">
+        <span class="provide-icon">🎚️</span>
+        <h3>Full Sound Production</h3>
+        <p>Professional PA, monitors, mixing board, and a sound engineer who knows how to listen. Every genre, every volume level.</p>
+      </div>
+      <div class="provide">
+        <span class="provide-icon">💡</span>
+        <h3>Stage Lighting</h3>
+        <p>Programmable lighting that sets the mood — whether that's intimate and warm, high-energy neon, or something in between. The room transforms for you.</p>
+      </div>
+      <div class="provide">
+        <span class="provide-icon">🎬</span>
+        <h3>Recording & Capture</h3>
+        <p>Multi-track audio recording and video capture of every session. Outputs available as digital downloads, streaming releases, or physical media.</p>
+      </div>
+      <div class="provide">
+        <span class="provide-icon">🌐</span>
+        <h3>Audience & Distribution</h3>
+        <p>Live stream to your audience or ours. Recordings distributed however you want — keep it, sell it, give it away. Your music, your call.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPCOMING SHOWS -->
+  <div class="calendar-section reveal" id="find-a-show">
+    <div class="calendar-inner">
+      <p class="section-tag">On the calendar</p>
+      <h2 class="section-title">Upcoming <span class="accent">sessions.</span></h2>
+      <div class="shows-grid">
+        <div class="show-row header">
+          <span style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim2);">Date</span>
+          <span style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim2);">Artist & Details</span>
+          <span style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim2);">Status</span>
+        </div>
+        <div class="show-row">
+          <div class="show-date">Mar 22<br>2026</div>
+          <div class="show-info">
+            <h3>Opening Night — TBA</h3>
+            <p>Zentura Grooves inaugural session · Vancouver, WA</p>
+          </div>
+          <span class="show-tag soon">Coming soon</span>
+        </div>
+        <div class="show-row">
+          <div class="show-date">Apr 5<br>2026</div>
+          <div class="show-info">
+            <h3>Open Slot</h3>
+            <p>Available for booking · All genres welcome</p>
+          </div>
+          <span class="show-tag open">Open</span>
+        </div>
+        <div class="show-row">
+          <div class="show-date">Apr 19<br>2026</div>
+          <div class="show-info">
+            <h3>Open Slot</h3>
+            <p>Available for booking · All genres welcome</p>
+          </div>
+          <span class="show-tag open">Open</span>
+        </div>
+        <div class="show-row">
+          <div class="show-date">May 3<br>2026</div>
+          <div class="show-info">
+            <h3>Open Slot</h3>
+            <p>Available for booking · All genres welcome</p>
+          </div>
+          <span class="show-tag open">Open</span>
+        </div>
+      </div>
+      <p class="calendar-note">
+        Schedule updates as artists book. Check back often — or submit your act below and we'll reach out when a slot opens up.
+      </p>
+    </div>
+  </div>
+
+  <!-- ARTIST FORM -->
+  <div class="forms-section" id="book-your-act">
+    <div class="form-panel">
+      <p class="form-panel-tag artist-tag">For artists</p>
+      <h2>Book your <span class="accent">act.</span></h2>
+      <p>Tell us about your music and what you need. We'll get back to you with available dates and what we can put together for your session.</p>
+      <form class="form" id="artist-form">
+        <div class="field">
+          <label>Artist / Band name</label>
+          <input type="text" name="artist" placeholder="Your name or act" required />
+        </div>
+        <div class="field">
+          <label>Genre / Style</label>
+          <select name="genre">
+            <option value="" disabled selected>Select a genre…</option>
+            <option>Jazz / Blues</option>
+            <option>Folk / Acoustic</option>
+            <option>Rock / Indie</option>
+            <option>Electronic / Ambient</option>
+            <option>Hip Hop / Spoken Word</option>
+            <option>Classical / Orchestral</option>
+            <option>World Music</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tell us about your act</label>
+          <textarea name="message" placeholder="Number of performers, equipment you're bringing, what kind of session you're imagining…"></textarea>
+        </div>
+        <button class="btn-submit-artist" type="submit" id="artist-btn">Submit your act</button>
+        <div class="form-success" id="artist-success">✦ &nbsp; Your email client should open pre-filled — just hit send and we'll be in touch.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">Zentura Media</div>
+    <div class="footer-note">Live sessions · Vancouver, WA · All genres welcome</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(r => io.observe(r));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Artist booking — mailto
+    document.getElementById('artist-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var artist  = document.querySelector('#artist-form input[name="artist"]').value.trim();
+      var genre   = document.querySelector('#artist-form select[name="genre"]').value;
+      var message = document.querySelector('#artist-form textarea[name="message"]').value.trim();
+
+      var subject = encodeURIComponent('Grooves Booking — ' + (artist || 'Artist Inquiry') + ' — ' + (genre || 'Genre TBD'));
+      var body = encodeURIComponent(
+        'Artist / Band: ' + artist + '\n' +
+        'Genre / Style: ' + (genre || 'Not specified') + '\n\n' +
+        'About the act:\n' + message
+      );
+
+      window.location.href = 'mailto:grooves@zentura.media?subject=' + subject + '&body=' + body;
+      document.getElementById('artist-success').style.display = 'block';
+      document.getElementById('artist-btn').textContent = 'Opening your email ✦';
+    });
+  </script>
+<audio id="bg-music" loop>
+  <source src="groove1.mp3" type="audio/mpeg">
+</audio>
+
+<div id="music-toggle" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #111;
+  border: 1px solid #00eaff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #00eaff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+">
+  🎵 Music: OFF
+</div>
+<script>
+  const audio = document.getElementById('bg-music');
+  const toggle = document.getElementById('music-toggle');
+  let playing = false;
+
+  // Fade settings
+  const fadeInTime = 2000;  // 2 seconds
+  const fadeOutTime = 2000; // 2 seconds
+
+  function fadeIn() {
+    audio.volume = 0;
+    const step = 0.01;
+    const interval = fadeInTime * step;
+
+    const fade = setInterval(() => {
+      if (audio.volume < 0.25) {
+        audio.volume += step;
+      } else {
+        clearInterval(fade);
+      }
+    }, interval);
+  }
+
+  function fadeOut(callback) {
+    const step = 0.01;
+    const interval = fadeOutTime * step;
+
+    const fade = setInterval(() => {
+      if (audio.volume > 0) {
+        audio.volume -= step;
+      } else {
+        clearInterval(fade);
+        if (callback) callback();
+      }
+    }, interval);
+  }
+
+  // Loop smoothing: fade out before restart
+  audio.addEventListener('ended', () => {
+    fadeOut(() => {
+      audio.currentTime = 0;
+      audio.play();
+      fadeIn();
+    });
+  });
+
+  toggle.addEventListener('click', () => {
+    if (!playing) {
+      audio.currentTime = 0;
+      audio.play();
+      fadeIn();
+      toggle.textContent = "🎵 Music: ON";
+      playing = true;
+    } else {
+   fadeOut(() => {
+  audio.pause();
+  audio.volume = 0;  // reset volume so next start is clean
+});
+
+      toggle.textContent = "🎵 Music: OFF";
+      playing = false;
+    }
+  });
+</script>
