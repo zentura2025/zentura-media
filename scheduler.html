@@ -173,10 +173,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
   <input type="date" id="f-end" placeholder="End date (optional)"/>
   <select id="f-type">
     <option value="concert">Concert / Show</option>
-    <option value="race">Sports / Race</option>
+    <option value="sport">Sport / Race</option>
     <option value="flight">Flight</option>
     <option value="hotel">Hotel / Stay</option>
     <option value="roadtrip">Road Trip</option>
+    <option value="explore">Explore</option>
+    <option value="recon">Recon</option>
   </select>
   <input type="text" id="f-loc" placeholder="Location (optional)"/>
   <button class="submit-btn" onclick="addForm()">Add event</button>
@@ -200,10 +202,10 @@ const WORKER_URL_KEY = 'dennis-scheduler-worker-url';
 let WORKER_URL = localStorage.getItem(WORKER_URL_KEY) || '';
 
 // ── TYPE DEFINITIONS ──────────────────────────────────────────────────────────
-const TYPE_COLOR = {concert:'#a78bfa', race:'#f5a623', flight:'#4f9cf9', hotel:'#3ecf8e', roadtrip:'#f07855'};
-const TYPE_BG    = {concert:'#2d1f5e', race:'#3d2a0a', flight:'#1a3a5c', hotel:'#0d3327',  roadtrip:'#3d1e12'};
-const TYPE_FG    = {concert:'#c4b5fd', race:'#fbbf24', flight:'#93c5fd', hotel:'#6ee7b7',  roadtrip:'#fca58a'};
-const TYPE_LABEL = {concert:'Concert', race:'Race',    flight:'Flight',  hotel:'Hotel',     roadtrip:'Road Trip'};
+const TYPE_COLOR = {concert:'#a78bfa', sport:'#f5a623', flight:'#4f9cf9', hotel:'#3ecf8e', roadtrip:'#f07855', explore:'#38d9a9', recon:'#d400ff'};
+const TYPE_BG    = {concert:'#2d1f5e', sport:'#3d2a0a', flight:'#1a3a5c', hotel:'#0d3327',  roadtrip:'#3d1e12', explore:'#0d3327', recon:'#2d0040'};
+const TYPE_FG    = {concert:'#c4b5fd', sport:'#fbbf24', flight:'#93c5fd', hotel:'#6ee7b7',  roadtrip:'#fca58a', explore:'#6ee7b7', recon:'#f0a0ff'};
+const TYPE_LABEL = {concert:'Concert', sport:'Sport',  flight:'Flight',  hotel:'Hotel',     roadtrip:'Road Trip', explore:'Explore', recon:'Recon'};
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let events  = [];
@@ -372,7 +374,7 @@ function conflicts() {
       // Skip if different types — being on a road trip during a concert is fine
       if (a.type !== b.type) continue;
       // Skip roadtrip vs roadtrip — nested trips are common
-      if (a.type === 'roadtrip') continue;
+      if (a.type === 'roadtrip' || a.type === 'recon' || a.type === 'explore') continue;
       if (a.start <= b.end && b.start <= a.end) {
         out.push(`Conflict: "${a.name}" overlaps "${b.name}"`);
       }
@@ -444,11 +446,13 @@ function nlAdd() {
   const lower = val.toLowerCase();
 
   let type = 'roadtrip';
-  if (lower.match(/concert|show|gig|music|band|vinyl|stage|festival|amphitheatre|roxie/)) type = 'concert';
-  else if (lower.match(/race|nascar|track|raceway|speedway|goodyear|darlington|talladega|indycar|formula/)) type = 'race';
-  else if (lower.match(/hornets|lakers|celtics|bulls|knicks|heat|warriors|nets|bucks|nba|basketball|hoops|fenway|baseball|mlb|stadium|arena|game|sport/)) type = 'race';
+  if (lower.match(/recon|research|cultural|market|reconnaisance/)) type = 'recon';
+  else if (lower.match(/concert|show|gig|music|band|vinyl|stage|festival|amphitheatre|roxie/)) type = 'concert';
+  else if (lower.match(/race|nascar|track|raceway|speedway|goodyear|darlington|talladega|indycar|formula/)) type = 'sport';
+  else if (lower.match(/hornets|lakers|celtics|bulls|knicks|heat|warriors|nets|bucks|nba|basketball|hoops|fenway|baseball|mlb|stadium|arena|game|sport/)) type = 'sport';
   else if (lower.match(/flight|fly|airport|airline/)) type = 'flight';
   else if (lower.match(/hotel|stay|motel|airbnb|inn|quarters/)) type = 'hotel';
+  else if (lower.match(/explore|museum|park|beach|hike|swim|walk|monument|gallery|smithsonian|quarter|market/)) type = 'explore';
 
   const d = parseDate(val);
 
