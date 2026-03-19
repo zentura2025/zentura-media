@@ -409,7 +409,7 @@ function parseDate(val) {
   if (m) {
     const mn = MONTHS[m[1].slice(0,3)] ?? 0;
     const d = new Date(today.getFullYear(), mn, parseInt(m[2]));
-    if (d < today) d.setFullYear(today.getFullYear() + 1);
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate()); if (d < todayMidnight) d.setFullYear(today.getFullYear() + 1);
     return ds(d);
   }
 
@@ -418,7 +418,7 @@ function parseDate(val) {
   if (m2) {
     const mn = MONTHS[m2[2].slice(0,3)] ?? 0;
     const d = new Date(today.getFullYear(), mn, parseInt(m2[1]));
-    if (d < today) d.setFullYear(today.getFullYear() + 1);
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate()); if (d < todayMidnight) d.setFullYear(today.getFullYear() + 1);
     return ds(d);
   }
 
@@ -445,7 +445,8 @@ function nlAdd() {
 
   let type = 'roadtrip';
   if (lower.match(/concert|show|gig|music|band|vinyl|stage|festival|amphitheatre|roxie/)) type = 'concert';
-  else if (lower.match(/race|nascar|game|hornets|sport|track|raceway|stadium|arena|fenway|baseball|nba|nfl/)) type = 'race';
+  else if (lower.match(/race|nascar|track|raceway|speedway|goodyear|darlington|talladega|indycar|formula/)) type = 'race';
+  else if (lower.match(/hornets|lakers|celtics|bulls|knicks|heat|warriors|nets|bucks|nba|basketball|hoops|fenway|baseball|mlb|stadium|arena|game|sport/)) type = 'race';
   else if (lower.match(/flight|fly|airport|airline/)) type = 'flight';
   else if (lower.match(/hotel|stay|motel|airbnb|inn|quarters/)) type = 'hotel';
 
