@@ -355,8 +355,15 @@ async function saveWorkerUrl() {
   const data = await kvLoad();
   if (data !== null) {
     setBadge('kv');
-    toast('☁ KV connected! Syncing…', 'var(--teal)');
-    await doSave();
+    // Pull KV data down — never push local data up on first connect
+    if (data.events && data.events.length > 0) {
+      events = data.events;
+      nextId = data.nextId || nextId;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({events, nextId})); } catch {}
+    }
+    toast('☁ KV connected!', 'var(--teal)');
+    conflicts();
+    render();
     document.getElementById('config-panel').classList.remove('open');
   } else {
     setBadge('err');
