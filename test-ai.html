@@ -2,12 +2,56 @@
 <html lang="en">
 <head>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; }
-        #chat-box { border: 1px solid #333; padding: 15px; max-width: 500px; border-radius: 8px; }
-        input { width: 80%; padding: 8px; background: #222; color: #fff; border: 1px solid #444; }
-        button { padding: 8px; cursor: pointer; background: #0070f3; color: white; border: none; }
-        #output { margin-top: 20px; line-height: 1.5; color: #00ffcc; }
-    </style>
+    body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; }
+    
+    #chat-box { 
+        border: 1px solid #333; 
+        padding: 15px; 
+        max-width: 600px; 
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* The "Smart" Textarea */
+    textarea { 
+        width: 100%; 
+        padding: 10px; 
+        background: #111; 
+        color: #00ffcc; /* That green you like */
+        border: 1px solid #444; 
+        border-radius: 4px;
+        resize: none; 
+        field-sizing: content; /* Auto-grows vertically as you type */
+        min-height: 40px;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    button { 
+        align-self: flex-end;
+        padding: 8px 20px; 
+        cursor: pointer; 
+        background: #0070f3; 
+        color: white; 
+        border: none; 
+        border-radius: 4px;
+    }
+
+    #output { 
+        margin-top: 20px; 
+        line-height: 1.6; 
+        color: #ddd; 
+        white-space: pre-wrap; /* Ensures the AI's formatting stays pretty */
+    }
+</style>
+
+<div id="chat-box">
+    <textarea id="userInput" placeholder="Ask me something... (Enter to send, Shift+Enter for new line)"></textarea>
+    <button onclick="askAI()">Ask</button>
+    <div id="output">Response will appear here...</div>
+</div>
 </head>
 <body>
 
@@ -36,6 +80,13 @@
                 outputDiv.innerText = "Error connecting to the worker.";
                 console.error(error);
             }
+            // Listen for the "Enter" key inside the textarea
+            document.getElementById("userInput").addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault(); // Prevents a literal new line from being added
+            askAI(); // Runs your existing function
+    }
+});
         }
     </script>
 
