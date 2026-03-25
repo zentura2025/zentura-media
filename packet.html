@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zentura Packet Viewer</title>
+    <style>
+        body { background: #000; color: #ddd; font-family: monospace; padding: 40px; line-height: 1.6; }
+        .container { max-width: 800px; margin: auto; border: 1px solid #333; padding: 20px; border-radius: 8px; }
+        h1 { color: #00ffcc; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        pre { background: #111; padding: 20px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
+        .back-link { color: #0070f3; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <a href="/inbox" class="back-link">← Back to Inbox</a>
+    <div class="container">
+        <h1 id="packet-id">Loading Packet...</h1>
+        <div id="content">
+            <pre id="raw-data">Fetching data from Zentura KV...</pre>
+        </div>
+    </div>
+
+    <script>
+        async function loadPacket() {
+            // 1. Grab the ID from the URL (e.g., packet.html?id=224e12fd...)
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (!id) return;
+
+            document.getElementById('packet-id').innerText = `Packet: ${id.substring(0,8)}...`;
+
+            try {
+                // 2. Ask your Worker for the data
+                const response = await fetch(`https://your-worker.workers.dev/get-packet?id=${id}`);
+                const data = await response.json();
+
+                // 3. Display the "Big Block of Text"
+                document.getElementById('raw-data').innerText = JSON.stringify(data, null, 2);
+            } catch (e) {
+                document.getElementById('raw-data').innerText = "Error loading packet. Check Worker logs.";
+            }
+        }
+        loadPacket();
+    </script>
+</body>
+</html>
