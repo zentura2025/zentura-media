@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<!-- saved from url=(0081)https://cloudflare-workers-autoconfig-zentura-media.zentura.workers.dev/backstage -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Back Stage at Zentura Media</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --fg: #ffffff;
+      --accent1: #ff00ff;
+      --accent2: #00eaff;
+      --accent3: #ff6af1;
+      --muted: #aaaaaa;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+    }
+
+    .wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin: 0 0 10px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      margin-top: 24px;
+      font-size: 1.05rem;
+      color: #dddddd;
+    }
+
+    .nav-links {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a {
+      color: var(--accent2);
+      text-decoration: none;
+      font-weight: 600;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent1);
+      border-color: var(--accent1);
+    }
+
+    /* Track layout */
+
+    .track {
+      margin: 40px 0;
+      padding: 24px 20px;
+      border-radius: 14px;
+      background: radial-gradient(circle at top left, rgba(255, 0, 255, 0.12), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(0, 234, 255, 0.12), transparent 55%),
+                  #050505;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .track.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .track-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .track-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent2);
+    }
+
+    .track-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .track-title {
+      font-size: 1.3rem;
+      margin: 6px 0 14px;
+      font-weight: 600;
+    }
+
+    .track-body {
+      font-size: 0.98rem;
+      color: #e3e3e3;
+    }
+
+    .track-body p {
+      margin: 0 0 10px;
+    }
+
+    .track-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .track-highlight {
+      border-left: 3px solid var(--accent2);
+      padding-left: 10px;
+      margin: 14px 0;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+    }
+
+    .track-footer-note {
+      margin-top: 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .tagline {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .encore {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d0d0d0;
+    }
+
+    .encore-title {
+      font-size: 1.1rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent3);
+      margin-bottom: 10px;
+    }
+
+    .encore-note {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+      .track {
+        padding: 20px 16px;
+      }
+    }
+
+.nav-track1 {
+  background: linear-gradient(90deg, #e57ae5, #931f87);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-track2 {
+  background: linear-gradient(90deg, #3250bb, #6ab5fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-track3 {
+  background: linear-gradient(90deg, #ff6af1, #00eaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>Back Stage</h1>
+      <div class="subtitle">at Zentura Media</div>
+      <p class="intro">
+        The lights hum, the mix warms, and the next idea is already loading. This isn’t a homepage.
+        This is the live room — the place where Zentura Media keeps the faders moving, the stories
+        evolving, and the tracks coming.
+      </p>
+      <p class="tagline">
+        Scroll down the record. Newest tracks live near the top. The whole page is searchable — use
+        <strong>Ctrl+F</strong> (or <strong>⌘+F</strong>) to jump to what you’re looking for.
+      </p>
+
+      <nav class="nav-links">
+        <!-- Update these hrefs to match your actual routes -->
+      <a class="nav nav-track1" href="https://cloudflare-workers-autoconfig-zentura-media.zentura.workers.dev/setlist.html">Set List</a>
+<a class="nav nav-track2" href="https://cloudflare-workers-autoconfig-zentura-media.zentura.workers.dev/news.html">Hot News</a>
+<a class="nav nav-track3" href="https://cloudflare-workers-autoconfig-zentura-media.zentura.workers.dev/changelog.html">Change Notes</a>
+
+        <!-- Marketplace intentionally omitted for now -->
+      </nav>
+    </header>
+<div style="text-align:left; margin-bottom:20px;">
+  <a href="https://cloudflare-workers-autoconfig-zentura-media.zentura.workers.dev/index.html" style="
+    color:#00eaff;
+    text-decoration:none;
+    font-size:0.9rem;
+    opacity:0.7;
+    transition:0.2s ease;
+  ">
+    ← Return to Main Stage
+  </a>
+</div>
+
+    <!-- TRACK XX — Latest / Top-most block you’ll replace or prepend above -->
+    <section class="track visible" id="track-06">
+      <div class="track-header">
+        <div class="track-label">Track 06 · What’s happening right now</div>
+        <div class="track-meta">Last updated: <!-- YYYY-MM-DD --> 2026-03-16</div>
+      </div>
+      <h2 class="track-title">The Back Stage Lights Come On</h2>
+      <div class="track-body">
+        <p>
+          This is the first official spin of <strong>Back Stage at Zentura Media</strong> — a living,
+          breathing page where the work-in-progress is the point, not the problem. Instead of hiding
+          the buildout, we’re putting it on the record.
+        </p>
+        <p>
+          From here on out, new tracks will appear above this one whenever there’s something worth
+          noting: a new section, a new artist, a new experiment, a new show idea. If it moves Zentura
+          forward, it belongs on this page.
+        </p>
+        <div class="track-highlight">
+          Back Stage is not a summary. It’s the session log. The mix notes. The “here’s what we’re
+          actually doing” channel.
+        </div>
+        <p class="track-footer-note">
+          To add a new update, copy this whole block, paste it above, bump the track number, and
+          change the title, date, and text. The newest track always lives at the top.
+        </p>
+      </div>
+    </section>
+
+    <!-- TRACK 02 — Ongoing feed example -->
+    <section class="track visible" id="track-05">
+      <div class="track-header">
+        <div class="track-label">Track 05 · Ongoing feed</div>
+        <div class="track-meta">Placeholder entry</div>
+      </div>
+      <h2 class="track-title">Shaping the Zentura Signal Path</h2>
+      <div class="track-body">
+        <p>
+          Back Stage is designed as one long scroll so the whole story stays in one place. No
+          pagination, no hunting through menus — just a continuous record of what changed, what
+          launched, and what’s coming next.
+        </p>
+        <p>
+          As Zentura News and the Changelog come online, this page will link into them: some tracks
+          will be quick notes, others will point to deeper dives. Think of this as the master
+          session that references all the other mixes.
+        </p>
+      </div>
+    </section>
+
+    <!-- TRACK 03 — Behind the mix -->
+    <section class="track visible" id="track-04">
+      <div class="track-header">
+        <div class="track-label">Track 04 · Behind the mix</div>
+        <div class="track-meta">Production notes</div>
+      </div>
+      <h2 class="track-title">Behind the Mix: How Back Stage Works</h2>
+      <div class="track-body">
+        <p>
+          Under the hood, Back Stage is intentionally simple: just HTML, CSS, and a bit of scroll
+          reveal. That means you can edit it with any text editor, drop in new tracks at the top,
+          and let the browser’s built-in search do the rest.
+        </p>
+        <p>
+          There’s no database here, no hidden CMS. The simplicity is the feature. It keeps Zentura
+          portable, understandable, and easy to maintain — even when the rest of the world insists
+          everything needs a dashboard.
+        </p>
+        <p class="track-footer-note">
+          Future note: this is also where we’ll log the first appearance of <strong>KuroeKat</strong>
+          as Zentura’s inaugural featured artist.
+        </p>
+      </div>
+    </section>
+
+    <!-- TRACK 04 — Spotlight (future KuroeKat, etc.) -->
+    <section class="track" id="track-03">
+      <div class="track-header">
+        <div class="track-label">Track 03 · Spotlight</div>
+        <div class="track-meta">Reserved for features</div>
+      </div>
+      <h2 class="track-title">Spotlight: Reserved for the First Artist</h2>
+      <div class="track-body">
+        <p>
+          This track is reserved for the moment the first official Zentura artist steps into the
+          light. The plan is simple: when the time is right, this becomes the place where
+          <strong>KuroeKat</strong> gets introduced — with links to her own pages, her own work, and
+          her own track list.
+        </p>
+        <p>
+          Until then, this section stands as a reminder: Back Stage isn’t just about one creator.
+          It’s the infrastructure for a small, intentional ecosystem of artists who want something
+          more personal than a generic storefront or a rented social feed.
+        </p>
+      </div>
+    </section>
+
+    <!-- TRACK 05 — Coming soon -->
+    <section class="track" id="track-02">
+      <div class="track-header">
+        <div class="track-label">Track 02 · Coming soon</div>
+        <div class="track-meta">Future-facing</div>
+      </div>
+      <h2 class="track-title">Coming Soon: More Rooms Back Stage</h2>
+      <div class="track-body">
+        <p>
+          Back Stage is the first room. From here, the plan is to wire in more spaces: Zentura News
+          for longer-form updates, a Changelog for precise platform changes, and eventually artist
+          pages that plug into the same signal path.
+        </p>
+        <p>
+          The goal isn’t to build something huge. It’s to build something honest, navigable, and
+          human — a place where the people who care can actually follow along without getting lost.
+        </p>
+      </div>
+    </section>
+
+    <!-- TRACK 06 — The story so far -->
+    <section class="track" id="track-01">
+      <div class="track-header">
+        <div class="track-label">Track 01 · The story so far</div>
+        <div class="track-meta">Living liner notes</div>
+      </div>
+      <h2 class="track-title">The Story So Far: Why Zentura Exists</h2>
+      <div class="track-body">
+        <p>
+          Zentura started with a simple belief: creative work shouldn’t have to squeeze itself into
+          someone else’s template just to be seen. Writers, artists, and performers deserve spaces
+          that feel like them — not like a generic feed with their name on top.
+        </p>
+        <p>
+          Back Stage is one expression of that belief. It’s not polished marketing copy. It’s the
+          running commentary of a platform being built in real time, with enough structure to be
+          useful and enough looseness to stay alive.
+        </p>
+        <p>
+          Over time, these tracks will tell a story: how the studio came together, how the first
+          artists joined, how the shows evolved, and how the whole thing stayed small enough to
+          care while still being big enough to matter.
+        </p>
+      </div>
+    </section>
+
+    <!-- ENCORE -->
+    <section class="encore" id="encore">
+      <div class="encore-title">Encore</div>
+      <p class="encore-note">
+        This space is intentionally left open — a future hidden track, a thank-you, a surprise, or
+        something that doesn’t have a name yet. When the right moment arrives, this is where it
+        lands.
+      </p>
+    </section>
+  </div>
+
+  <script>
+    // Simple scroll reveal: keeps all content in the DOM so Ctrl+F still works.
+    const tracks = document.querySelectorAll('.track');
+
+    const revealOnScroll = () => {
+      const trigger = window.innerHeight * 0.9;
+      tracks.forEach(track => {
+        const rect = track.getBoundingClientRect();
+        if (rect.top < trigger) {
+          track.classList.add('visible');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+  </script>
+
+
+</body></html>

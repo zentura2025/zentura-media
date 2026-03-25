@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zentura Media</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      position: relative; /* Needed for the secret dot */
+    }
+
+    .container {
+      max-width: 600px;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #ff00ff, #00eaff, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    a.nav {
+      display: block;
+      margin: 14px 0;
+      font-size: 1.2rem;
+      color: #00eaff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    a.nav:hover {
+      color: #ff00ff;
+    }
+
+    /* Secret glowing dot */
+    .secret-dot {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .secret-dot a {
+      color: #00eaff;
+      opacity: 0.15;
+      font-size: 1.4rem;
+      text-decoration: none;
+      transition: opacity 0.3s ease, color 0.3s ease;
+    }
+@keyframes pulse {
+  0% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+  100% { opacity: 0.15; }
+}
+
+.secret-dot a {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+    .secret-dot a:hover {
+      opacity: 1;
+      color: #ff00ff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Zentura Media</h1>
+
+    <a class="nav" href="publishing.html">Publishing Materials</a>
+    <a class="nav" href="stickers.html">Stickers & Art</a>
+    <a class="nav" href="grooves.html">Zentura Grooves</a>
+
+    <!-- Subtle Back Stage link -->
+    <a class="nav" href="backstage.html" style="opacity:0.6; font-size:0.9rem;">
+      Back Stage
+    </a>
+  </div>
+
+  <!-- Secret glowing dot -->
+  <div class="secret-dot">
+    <a href="backstage.html">●</a>
+  </div>
+</body>
+</html>
+

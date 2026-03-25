@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zentura · Golden</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #000;
+  --surface: #0e0f11;
+  --surface2: #16181c;
+  --surface3: #1e2126;
+  --border: #2a2d33;
+  --border2: #363a42;
+  --text: #e8eaf0;
+  --text2: #8b9099;
+  --text3: #555b66;
+  --magenta: #ff00ff;
+  --cyan: #00eaff;
+  --magenta-dim: #2d0030;
+  --cyan-dim: #00252e;
+  --gold: #f5c842;
+  --gold-dim: #2a2000;
+  --green: #3ecf8e;
+  --green-dim: #0a2e1e;
+  --red: #f06060;
+  --red-dim: #2e0a0a;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --grad: linear-gradient(90deg, #ff00ff, #00eaff);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ── LOCK SCREEN ── */
+#lock {
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+gap: 24px;
+padding: 2rem;
+}
+.lock-logo {
+font-size: 13px;
+font-family: var(--mono);
+letter-spacing: .15em;
+text-transform: uppercase;
+background: var(--grad);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+.lock-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 2rem;
+width: 100%;
+max-width: 360px;
+display: flex;
+flex-direction: column;
+gap: 14px;
+}
+.lock-card h2 {
+font-size: 16px;
+font-weight: 500;
+color: var(--text);
+margin-bottom: 2px;
+}
+.lock-card p { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+.lock-input {
+background: var(--surface2);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+padding: 10px 14px;
+color: var(--text);
+font-size: 14px;
+font-family: var(--sans);
+outline: none;
+transition: border .15s;
+width: 100%;
+}
+.lock-input:focus { border-color: var(--border2); }
+.lock-err { font-size: 12px; color: var(--red); font-family: var(--mono); display: none; }
+
+/* ── SHELL ── */
+#app { display: none; }
+.shell { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* ── TOP BAR ── */
+.topbar {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 2rem;
+padding-bottom: 1.25rem;
+border-bottom: 1px solid var(--border);
+}
+.topbar-brand {
+font-size: 13px;
+font-family: var(--mono);
+letter-spacing: .12em;
+text-transform: uppercase;
+background: var(--grad);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.mode-pill {
+font-size: 10px;
+font-family: var(--mono);
+padding: 3px 10px;
+border-radius: 20px;
+border: 1px solid var(--border);
+color: var(--text3);
+letter-spacing: .05em;
+}
+.mode-pill.admin { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+
+/* ── BUTTONS ── */
+.btn {
+padding: 9px 18px;
+border-radius: var(--radius);
+font-size: 13px;
+font-family: var(--sans);
+font-weight: 500;
+cursor: pointer;
+border: 1px solid var(--border);
+background: var(--surface2);
+color: var(--text2);
+transition: all .15s;
+}
+.btn:hover { border-color: var(--border2); color: var(--text); }
+.btn-grad {
+background: linear-gradient(90deg, #ff00ff22, #00eaff22);
+border: 1px solid;
+border-image: linear-gradient(90deg, #ff00ff, #00eaff) 1;
+color: var(--cyan);
+font-family: var(--sans);
+font-size: 13px;
+font-weight: 500;
+padding: 9px 18px;
+border-radius: var(--radius);
+cursor: pointer;
+transition: all .15s;
+}
+.btn-grad:hover { background: linear-gradient(90deg, #ff00ff44, #00eaff44); color: #fff; }
+.btn-gold {
+background: var(--gold-dim);
+border: 1px solid var(--gold);
+color: var(--gold);
+font-family: var(--sans);
+font-size: 13px;
+font-weight: 500;
+padding: 9px 18px;
+border-radius: var(--radius);
+cursor: pointer;
+transition: all .15s;
+}
+.btn-gold:hover { background: var(--gold); color: #000; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+.btn-danger { border-color: var(--red); color: var(--red); }
+.btn-danger:hover { background: var(--red-dim); }
+.btn-success { border-color: var(--green); color: var(--green); }
+.btn-success:hover { background: var(--green-dim); }
+
+/* ── TABS ── */
+.tabs {
+display: flex;
+gap: 4px;
+margin-bottom: 1.5rem;
+background: var(--surface);
+border-radius: var(--radius);
+padding: 3px;
+width: fit-content;
+}
+.tab {
+padding: 6px 18px;
+border-radius: 6px;
+font-size: 13px;
+cursor: pointer;
+color: var(--text2);
+border: none;
+background: transparent;
+font-family: var(--sans);
+transition: all .15s;
+}
+.tab.active {
+background: var(--surface2);
+color: var(--text);
+border: 1px solid var(--border);
+}
+.tab:hover:not(.active) { color: var(--text); }
+
+/* ── CARDS ── */
+.card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 1.25rem 1.5rem;
+margin-bottom: 10px;
+transition: border .15s;
+}
+.card:hover { border-color: var(--border2); }
+
+/* ── INVOICE CARD ── */
+.inv-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 1.25rem 1.5rem;
+margin-bottom: 10px;
+display: flex;
+align-items: flex-start;
+gap: 14px;
+transition: border .15s;
+cursor: pointer;
+}
+.inv-card:hover { border-color: var(--border2); }
+.inv-card.paid { opacity: .5; }
+.inv-stripe {
+width: 3px;
+border-radius: 2px;
+align-self: stretch;
+flex-shrink: 0;
+min-height: 20px;
+}
+.inv-body { flex: 1; min-width: 0; }
+.inv-name { font-size: 14px; font-weight: 500; }
+.inv-client { font-size: 12px; color: var(--text2); margin-top: 2px; font-family: var(--mono); }
+.inv-desc { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.inv-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.inv-amount { font-size: 18px; font-weight: 600; font-family: var(--mono); }
+.status-pill {
+font-size: 10px;
+padding: 3px 10px;
+border-radius: 20px;
+font-family: var(--mono);
+letter-spacing: .04em;
+font-weight: 500;
+}
+.status-unpaid { background: var(--magenta-dim); color: #ff88ff; border: 1px solid #ff00ff44; }
+.status-paid { background: var(--green-dim); color: var(--green); border: 1px solid #3ecf8e44; }
+.status-partial { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold); }
+.status-overdue { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+
+/* ── FORM ELEMENTS ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-grid.full { grid-template-columns: 1fr; }
+.fg { display: flex; flex-direction: column; gap: 5px; }
+.fg.span2 { grid-column: 1 / -1; }
+label { font-size: 11px; color: var(--text3); font-family: var(--mono); letter-spacing: .05em; }
+input, select, textarea {
+background: var(--surface2);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+padding: 9px 12px;
+color: var(--text);
+font-size: 13px;
+font-family: var(--sans);
+outline: none;
+transition: border .15s;
+width: 100%;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--border2); }
+input::placeholder, textarea::placeholder { color: var(--text3); }
+select option { background: var(--surface2); }
+textarea { resize: vertical; min-height: 70px; }
+
+/* ── SECTION LABEL ── */
+.section-lbl {
+font-size: 10px;
+letter-spacing: .1em;
+text-transform: uppercase;
+color: var(--text3);
+font-family: var(--mono);
+margin: 1.5rem 0 10px;
+padding-bottom: 6px;
+border-bottom: 1px solid var(--border);
+}
+
+/* ── STATS ROW ── */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+.stat {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 1rem 1.25rem;
+}
+.stat-val { font-size: 22px; font-weight: 600; font-family: var(--mono); }
+.stat-lbl { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-top: 3px; }
+.stat-val.grad {
+background: var(--grad);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+/* ── INVOICE DETAIL MODAL ── */
+.modal-overlay {
+position: fixed; inset: 0;
+background: rgba(0,0,0,.85);
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 100;
+padding: 1.5rem;
+backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+background: var(--surface);
+border: 1px solid var(--border2);
+border-radius: var(--radius-lg);
+width: 100%;
+max-width: 520px;
+max-height: 90vh;
+overflow-y: auto;
+padding: 2rem;
+position: relative;
+}
+.modal-close {
+position: absolute;
+top: 1rem; right: 1rem;
+background: none;
+border: none;
+color: var(--text3);
+font-size: 20px;
+cursor: pointer;
+transition: color .15s;
+line-height: 1;
+}
+.modal-close:hover { color: var(--text); }
+.modal-title {
+font-size: 18px;
+font-weight: 600;
+margin-bottom: 4px;
+}
+.modal-code {
+font-size: 11px;
+font-family: var(--mono);
+color: var(--text3);
+margin-bottom: 1.25rem;
+}
+.modal-divider {
+border: none;
+border-top: 1px solid var(--border);
+margin: 1.25rem 0;
+}
+.modal-row {
+display: flex;
+justify-content: space-between;
+align-items: baseline;
+margin-bottom: 8px;
+}
+.modal-row-lbl { font-size: 12px; color: var(--text2); }
+.modal-row-val { font-size: 13px; font-family: var(--mono); }
+.modal-total {
+display: flex;
+justify-content: space-between;
+align-items: baseline;
+padding: 10px 0;
+}
+.modal-total-lbl { font-size: 14px; font-weight: 500; }
+.modal-total-val {
+font-size: 26px;
+font-weight: 700;
+font-family: var(--mono);
+background: var(--grad);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+/* ── PAYMENT METHOD BUTTONS ── */
+.pay-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1rem; }
+.pay-btn {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 6px;
+padding: 16px;
+border-radius: var(--radius-lg);
+border: 1px solid var(--border2);
+background: var(--surface2);
+cursor: pointer;
+transition: all .2s;
+text-decoration: none;
+}
+.pay-btn:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+.pay-btn.zelle:hover { border-color: #6d2cff; background: #1a0040; }
+.pay-icon { font-size: 28px; }
+.pay-name { font-size: 13px; font-weight: 600; color: var(--text); font-family: var(--sans); }
+.pay-sub { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+
+/* ── CUSTOMER SEARCH ── */
+.search-hero {
+text-align: center;
+padding: 3rem 1rem 2rem;
+}
+.search-hero h2 {
+font-size: 28px;
+font-weight: 300;
+margin-bottom: 8px;
+}
+.search-hero h2 span {
+background: var(--grad);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+font-weight: 600;
+}
+.search-hero p { font-size: 13px; color: var(--text3); font-family: var(--mono); margin-bottom: 2rem; }
+.search-row { display: flex; gap: 8px; max-width: 440px; margin: 0 auto; }
+.search-row input { flex: 1; }
+
+/* ── SYNC BADGE ── */
+.sync-badge { font-size:10px; font-family:var(--mono); padding:3px 9px; border:1px solid var(--border); border-radius:20px; color:var(--text3); }
+.sync-badge.kv    { border-color:var(--cyan);  color:var(--cyan); }
+.sync-badge.local { border-color:var(--gold);  color:var(--gold); }
+.sync-badge.err   { border-color:var(--red);   color:var(--red);  }
+
+/* ── CONFIG PANEL ── */
+.config-panel { background:var(--surface); border:1px solid var(--gold); border-radius:var(--radius-lg); padding:1.25rem; margin-bottom:1rem; display:none; }
+.config-panel h3 { font-size:11px; font-family:var(--mono); color:var(--gold); margin-bottom:6px; letter-spacing:.08em; text-transform:uppercase; }
+.config-panel p  { font-size:12px; color:var(--text2); margin-bottom:10px; line-height:1.6; }
+.config-row { display:flex; gap:8px; }
+.config-panel input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:8px 12px; color:var(--text); font-size:13px; font-family:var(--mono); outline:none; }
+.config-panel input:focus { border-color:var(--gold); }
+.config-panel input::placeholder { color:var(--text3); }
+
+/* ── TOAST ── */
+#toast {
+position: fixed;
+bottom: 1.5rem; right: 1.5rem;
+background: var(--surface2);
+border: 1px solid var(--border2);
+border-radius: var(--radius);
+padding: 10px 16px;
+font-size: 12px;
+font-family: var(--mono);
+color: var(--text2);
+opacity: 0;
+transition: opacity .3s;
+pointer-events: none;
+z-index: 999;
+}
+#toast.show { opacity: 1; }
+
+/* ── EMPTY STATE ── */
+.empty {
+text-align: center;
+padding: 3rem 0;
+color: var(--text3);
+font-family: var(--mono);
+font-size: 13px;
+}
+
+/* ── COPY LINK ── */
+.copy-link {
+display: flex;
+align-items: center;
+gap: 8px;
+background: var(--surface2);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+padding: 8px 12px;
+font-size: 12px;
+font-family: var(--mono);
+color: var(--text3);
+margin-top: 10px;
+cursor: pointer;
+transition: border .15s;
+}
+.copy-link:hover { border-color: var(--border2); color: var(--text2); }
+.copy-link span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 600px) {
+.stats { grid-template-columns: 1fr 1fr; }
+.form-grid { grid-template-columns: 1fr; }
+.fg.span2 { grid-column: 1; }
+.pay-methods { grid-template-columns: 1fr; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- ══════════ LOCK SCREEN ══════════ -->
+
+<div id="lock">
+  <div class="lock-logo">Zentura · Golden</div>
+  <div class="lock-card">
+    <div>
+      <h2>Welcome</h2>
+      <p>Enter your access code or look up an invoice</p>
+    </div>
+    <div class="fg">
+      <label>ADMIN ACCESS CODE</label>
+      <input type="password" id="pw-input" class="lock-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()"/>
+    </div>
+    <div id="pw-err" class="lock-err">Incorrect access code.</div>
+    <button class="btn-grad" onclick="tryLogin()">Enter Admin</button>
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0">
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">or</span>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+    </div>
+    <button class="btn" onclick="enterCustomer()">Look Up My Invoice</button>
+  </div>
+</div>
+
+<!-- ══════════ MAIN APP ══════════ -->
+
+<div id="app">
+<div class="shell">
+
+  <!-- Top Bar -->
+
+  <div class="topbar">
+    <div class="topbar-brand">Zentura · Golden</div>
+    <div class="topbar-right">
+      <span class="mode-pill" id="mode-pill">customer</span>
+      <span class="sync-badge local" id="sync-badge">⬡ local</span>
+      <button class="btn btn-sm" onclick="toggleConfig()" title="Cloud sync">⚙</button>
+      <button class="btn btn-sm" onclick="logout()" id="logout-btn" style="display:none">Exit Admin</button>
+      <button class="btn btn-sm" onclick="goHome()">← Home</button>
+    </div>
+  </div>
+
+  <!-- KV Config Panel -->
+  <div class="config-panel" id="config-panel">
+    <h3>☁ Cloudflare KV Sync</h3>
+    <p>Paste your Worker URL to sync invoices across all devices. Same Worker as the Scheduler — just a different endpoint.</p>
+    <div class="config-row">
+      <input type="text" id="worker-url-input" placeholder="https://scheduler-sync.zentura.workers.dev"/>
+      <button class="btn-gold" onclick="saveWorkerUrl()">Save & Sync</button>
+    </div>
+  </div>
+
+  <!-- ADMIN VIEW -->
+
+  <div id="admin-view" style="display:none">
+    <div class="stats" id="stats-row"></div>
+    <div class="tabs">
+      <button class="tab active" id="atab-inv" onclick="aTab('invoices')">Invoices</button>
+      <button class="tab" id="atab-new" onclick="aTab('new')">+ New Invoice</button>
+    </div>
+
+```
+<!-- Invoice list -->
+<div id="admin-invoices"></div>
+
+<!-- New Invoice form -->
+<div id="admin-new" style="display:none">
+  <div class="card">
+    <div class="section-lbl" style="margin-top:0">Invoice Details</div>
+    <div class="form-grid">
+      <div class="fg span2">
+        <label>CLIENT NAME</label>
+        <input type="text" id="n-client" placeholder="Full name or business"/>
+      </div>
+      <div class="fg">
+        <label>CLIENT EMAIL</label>
+        <input type="email" id="n-email" placeholder="client@email.com"/>
+      </div>
+      <div class="fg">
+        <label>INVOICE CODE (auto or custom)</label>
+        <input type="text" id="n-code" placeholder="INV-1001"/>
+      </div>
+      <div class="fg span2">
+        <label>DESCRIPTION OF WORK</label>
+        <textarea id="n-desc" placeholder="Custom sticker set · 20 designs · digital delivery"></textarea>
+      </div>
+      <div class="fg">
+        <label>AMOUNT ($)</label>
+        <input type="number" id="n-amount" placeholder="0.00" step="0.01"/>
+      </div>
+      <div class="fg">
+        <label>DUE DATE</label>
+        <input type="date" id="n-due"/>
+      </div>
+      <div class="fg">
+        <label>CATEGORY</label>
+        <select id="n-cat">
+          <option value="art">Art / Stickers</option>
+          <option value="music">Music / Grooves</option>
+          <option value="publishing">Publishing</option>
+          <option value="consulting">Consulting</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>STATUS</label>
+        <select id="n-status">
+          <option value="unpaid">Unpaid</option>
+          <option value="partial">Partial</option>
+          <option value="paid">Paid</option>
+        </select>
+      </div>
+      <div class="fg span2" style="flex-direction:row;gap:10px;margin-top:4px">
+        <button class="btn-grad" style="flex:1" onclick="saveInvoice()">Save Invoice</button>
+        <button class="btn" onclick="aTab('invoices')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- CUSTOMER VIEW -->
+
+  <div id="customer-view" style="display:none">
+    <div class="search-hero">
+      <h2>Find your <span>Invoice</span></h2>
+      <p>Search by name, email, or enter your invoice code</p>
+      <div class="search-row">
+        <input type="text" id="c-search" placeholder="Name, email, or INV-####" onkeydown="if(event.key==='Enter')customerSearch()"/>
+        <button class="btn-grad" onclick="customerSearch()">Search</button>
+      </div>
+    </div>
+    <div id="customer-results"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════ INVOICE MODAL ══════════ -->
+
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const ADMIN_PW = 'zentura2026';
+const STORAGE_KEY    = 'zentura-golden-v1';
+const WORKER_URL_KEY = 'zentura-golden-worker-url';
+const ZELLE_EMAIL = 'golden@zentura.media';
+const BLUEVINE_LINK = 'https://pay.bluevine.com/YOUR_LINK_HERE'; // swap in real link
+
+let WORKER_URL = localStorage.getItem(WORKER_URL_KEY) || '';
+
+const CAT_COLOR = {
+  art: '#a78bfa', music: '#00eaff', publishing: '#ff00ff',
+  consulting: '#f5a623', other: '#8b9099'
+};
+
+let invoices = [];
+let nextId = 1001;
+let isAdmin = false;
+let editingId = null;
+let saveTimer = null;
+
+// ── KV STORAGE ──
+async function kvLoad() {
+  if (!WORKER_URL) return null;
+  try {
+    const r = await fetch(WORKER_URL + '/golden');
+    if (!r.ok) return null;
+    return await r.json();
+  } catch { return null; }
+}
+
+async function kvSave(data) {
+  if (!WORKER_URL) return false;
+  try {
+    const r = await fetch(WORKER_URL + '/golden', {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data),
+    });
+    return r.ok;
+  } catch { return false; }
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(doSave, 700);
+}
+
+async function doSave() {
+  const data = { invoices, nextId };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e){}
+  if (WORKER_URL) {
+    const ok = await kvSave(data);
+    setSyncBadge(ok ? 'kv' : 'err');
+  } else {
+    setSyncBadge('local');
+  }
+}
+
+// keep old save() as alias so existing calls still work
+function save() { scheduleSave(); }
+
+async function load() {
+  let data = null;
+  if (WORKER_URL) {
+    data = await kvLoad();
+    if (data) setSyncBadge('kv');
+  }
+  if (!data) {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) data = JSON.parse(raw);
+    } catch(e) {}
+    setSyncBadge(WORKER_URL ? 'err' : 'local');
+  }
+  if (data) {
+    invoices = data.invoices || [];
+    nextId   = data.nextId   || 1001;
+  }
+}
+
+function setSyncBadge(mode) {
+  const b = document.getElementById('sync-badge');
+  if (!b) return;
+  if (mode === 'kv')    { b.className = 'sync-badge kv';    b.textContent = '☁ synced'; }
+  else if (mode==='local') { b.className = 'sync-badge local'; b.textContent = '⬡ local'; }
+  else                  { b.className = 'sync-badge err';   b.textContent = '⚠ sync error'; }
+}
+
+function saveWorkerUrl() {
+  const url = document.getElementById('worker-url-input').value.trim().replace(/\/$/, '');
+  WORKER_URL = url;
+  if (url) localStorage.setItem(WORKER_URL_KEY, url);
+  else localStorage.removeItem(WORKER_URL_KEY);
+  document.getElementById('config-panel').style.display = 'none';
+  load().then(() => { renderStats(); renderAdminInvoices(); toast(url ? '☁ KV sync enabled' : 'Switched to local storage'); });
+}
+
+function toggleConfig() {
+  const p = document.getElementById('config-panel');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+
+// ── UTILS ──
+function fmt$(n) { return '$' + parseFloat(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtDate(s) { if(!s) return '—'; const [y,m,d]=s.split('-'); return new Date(y,m-1,d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function genCode() { return 'INV-' + nextId; }
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 2500);
+}
+function copyToClip(txt) {
+  navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard'));
+}
+
+// ── AUTH ──
+function tryLogin() {
+  const val = document.getElementById('pw-input').value;
+  if (val === ADMIN_PW) {
+    isAdmin = true;
+    document.getElementById('lock').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    showAdmin();
+  } else {
+    document.getElementById('pw-err').style.display = 'block';
+  }
+}
+function enterCustomer() {
+  isAdmin = false;
+  document.getElementById('lock').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  showCustomer();
+
+  // Auto-load from URL hash
+  const hash = location.hash.replace('#','');
+  if (hash) {
+    document.getElementById('c-search').value = hash;
+    customerSearch();
+  }
+}
+function logout() {
+  isAdmin = false;
+  document.getElementById('lock').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pw-input').value = '';
+}
+function goHome() { location.href = 'index.html'; }
+
+// ── VIEWS ──
+function showAdmin() {
+  document.getElementById('admin-view').style.display = 'block';
+  document.getElementById('customer-view').style.display = 'none';
+  document.getElementById('mode-pill').className = 'mode-pill admin';
+  document.getElementById('mode-pill').textContent = 'admin';
+  document.getElementById('logout-btn').style.display = 'inline-block';
+  renderStats();
+  renderAdminInvoices();
+}
+function showCustomer() {
+  document.getElementById('admin-view').style.display = 'none';
+  document.getElementById('customer-view').style.display = 'block';
+  document.getElementById('mode-pill').className = 'mode-pill';
+  document.getElementById('mode-pill').textContent = 'client';
+  document.getElementById('logout-btn').style.display = 'none';
+}
+
+// ── ADMIN TABS ──
+function aTab(t) {
+  document.getElementById('atab-inv').classList.toggle('active', t==='invoices');
+  document.getElementById('atab-new').classList.toggle('active', t==='new');
+  document.getElementById('admin-invoices').style.display = t==='invoices'?'block':'none';
+  document.getElementById('admin-new').style.display = t==='new'?'block':'none';
+  if (t==='new') {
+    editingId = null;
+    clearNewForm();
+    document.getElementById('n-code').value = genCode();
+  }
+}
+
+function clearNewForm() {
+  ['n-client','n-email','n-code','n-desc','n-amount','n-due'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('n-cat').value = 'art';
+  document.getElementById('n-status').value = 'unpaid';
+}
+
+// ── STATS ──
+function renderStats() {
+  const total = invoices.reduce((s,i)=>s+parseFloat(i.amount||0),0);
+  const paid = invoices.filter(i=>i.status==='paid').reduce((s,i)=>s+parseFloat(i.amount||0),0);
+  const unpaid = invoices.filter(i=>i.status==='unpaid').reduce((s,i)=>s+parseFloat(i.amount||0),0);
+  const overdue = invoices.filter(i=>i.status!=='paid'&&i.due&&i.due<new Date().toISOString().split('T')[0]).length;
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat"><div class="stat-val grad">${fmt$(total)}</div><div class="stat-lbl">Total Invoiced</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--green)">${fmt$(paid)}</div><div class="stat-lbl">Collected</div></div>
+    <div class="stat"><div class="stat-val" style="color:#ff88ff">${fmt$(unpaid)}</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--red)">${overdue}</div><div class="stat-lbl">Overdue</div></div>
+  `;
+}
+
+// ── ADMIN INVOICE LIST ──
+function renderAdminInvoices() {
+  const el = document.getElementById('admin-invoices');
+  if (!invoices.length) { el.innerHTML = '<div class="empty">No invoices yet — create your first one above</div>'; return; }
+  const sorted = [...invoices].sort((a,b)=>b.id-a.id);
+  el.innerHTML = sorted.map(inv => invCard(inv, true)).join('');
+}
+
+function invCard(inv, adminMode) {
+  const c = CAT_COLOR[inv.cat] || '#888';
+  const today = new Date().toISOString().split('T')[0];
+  const isOverdue = inv.status !== 'paid' && inv.due && inv.due < today;
+  const status = isOverdue ? 'overdue' : inv.status;
+  const statusLabel = {unpaid:'Unpaid',paid:'Paid',partial:'Partial',overdue:'Overdue'}[status]||status;
+  const adminBtns = adminMode ? `
+    <div style="display:flex;gap:6px;margin-top:8px">
+      <button class="btn btn-sm" onclick="event.stopPropagation();editInvoice(${inv.id})">Edit</button>
+      <button class="btn btn-sm btn-success" onclick="event.stopPropagation();markPaid(${inv.id})" ${inv.status==='paid'?'disabled style="opacity:.4"':''}>Mark Paid</button>
+      <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteInv(${inv.id})">Delete</button>
+    </div>` : '';
+  return `<div class="inv-card${inv.status==='paid'?' paid':''}" onclick="openModal(${inv.id})">
+    <div class="inv-stripe" style="background:${c}"></div>
+    <div class="inv-body">
+      <div class="inv-name">${inv.client}</div>
+      <div class="inv-client">${inv.code} · ${inv.email||'no email'}</div>
+      <div class="inv-desc">${inv.desc||'—'}</div>
+      ${adminBtns}
+    </div>
+    <div class="inv-right">
+      <div class="inv-amount">${fmt$(inv.amount)}</div>
+      <span class="status-pill status-${status}">${statusLabel}</span>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">Due ${fmtDate(inv.due)}</div>
+    </div>
+  </div>`;
+}
+
+// ── SAVE / EDIT INVOICE ──
+function saveInvoice() {
+  const client = document.getElementById('n-client').value.trim();
+  const amount = document.getElementById('n-amount').value;
+  if (!client || !amount) { toast('Client name and amount required.'); return; }
+
+  const inv = {
+    id: editingId || nextId,
+    code: document.getElementById('n-code').value.trim() || genCode(),
+    client,
+    email: document.getElementById('n-email').value.trim(),
+    desc: document.getElementById('n-desc').value.trim(),
+    amount: parseFloat(amount),
+    due: document.getElementById('n-due').value,
+    cat: document.getElementById('n-cat').value,
+    status: document.getElementById('n-status').value,
+    created: editingId ? invoices.find(i=>i.id===editingId)?.created : new Date().toISOString().split('T')[0]
+  };
+
+  if (editingId) {
+    invoices = invoices.map(i => i.id === editingId ? inv : i);
+    toast('Invoice updated');
+  } else {
+    invoices.push(inv);
+    nextId++;
+    toast(`Invoice ${inv.code} created`);
+  }
+  save(); renderStats(); renderAdminInvoices(); aTab('invoices');
+}
+
+function editInvoice(id) {
+  const inv = invoices.find(i=>i.id===id);
+  if (!inv) return;
+  editingId = id;
+  aTab('new');
+  document.getElementById('n-client').value = inv.client;
+  document.getElementById('n-email').value = inv.email||'';
+  document.getElementById('n-code').value = inv.code;
+  document.getElementById('n-desc').value = inv.desc||'';
+  document.getElementById('n-amount').value = inv.amount;
+  document.getElementById('n-due').value = inv.due||'';
+  document.getElementById('n-cat').value = inv.cat||'other';
+  document.getElementById('n-status').value = inv.status;
+}
+
+function markPaid(id) {
+  invoices = invoices.map(i=>i.id===id?{...i,status:'paid'}:i);
+  save(); renderStats(); renderAdminInvoices(); toast('Marked as paid ✓');
+}
+
+function deleteInv(id) {
+  const inv = invoices.find(i=>i.id===id);
+  if (!confirm(`Delete invoice for ${inv?.client}?`)) return;
+  invoices = invoices.filter(i=>i.id!==id);
+  save(); renderStats(); renderAdminInvoices(); toast('Invoice deleted');
+}
+
+// ── CUSTOMER SEARCH ──
+function customerSearch() {
+  const q = document.getElementById('c-search').value.trim().toLowerCase();
+  if (!q) return;
+  const results = invoices.filter(inv =>
+    inv.client.toLowerCase().includes(q) ||
+    (inv.email||'').toLowerCase().includes(q) ||
+    inv.code.toLowerCase() === q ||
+    inv.code.toLowerCase().includes(q)
+  );
+  const el = document.getElementById('customer-results');
+  if (!results.length) {
+    el.innerHTML = `<div class="empty">No invoices found for "<strong>${q}</strong>"<br><br>Double-check spelling or contact Zentura Media</div>`;
+    return;
+  }
+  el.innerHTML = results.map(inv => invCard(inv, false)).join('');
+}
+
+// ── MODAL ──
+function openModal(id) {
+  const inv = invoices.find(i=>i.id===id);
+  if (!inv) return;
+  const today = new Date().toISOString().split('T')[0];
+  const isOverdue = inv.status !== 'paid' && inv.due && inv.due < today;
+  const status = isOverdue ? 'overdue' : inv.status;
+  const statusLabel = {unpaid:'Unpaid',paid:'Paid',partial:'Partial',overdue:'Overdue'}[status]||status;
+  const isPaid = inv.status === 'paid';
+  const shareLink = `${location.origin}${location.pathname}#${inv.code}`;
+
+  const paySection = isPaid ? `
+    <div style="text-align:center;padding:1.5rem 0">
+      <div style="font-size:32px;margin-bottom:8px">✓</div>
+      <div style="color:var(--green);font-family:var(--mono);font-size:14px">Invoice paid — thank you!</div>
+    </div>` : `
+    <div class="section-lbl" style="margin-top:0">Choose Payment Method</div>
+    <div class="pay-methods">
+      <div class="pay-btn zelle" onclick="toggleZelle(this, '${inv.code}', '${inv.amount}')">
+        <div class="pay-icon">💜</div>
+        <div class="pay-name">Zelle</div>
+        <div class="pay-sub">Tap for instructions</div>
+      </div>
+      <a class="pay-btn" href="${BLUEVINE_LINK}" target="_blank" rel="noopener">
+        <div class="pay-icon">💳</div>
+        <div class="pay-name">Card Payment</div>
+        <div class="pay-sub">Via BlueVine</div>
+      </a>
+    </div>
+    <div id="zelle-card" style="display:none;margin-top:10px;background:var(--surface2);border:1px solid #6d2cff44;border-radius:var(--radius-lg);padding:1.25rem">
+      <div style="font-size:12px;color:var(--text3);font-family:var(--mono);margin-bottom:12px;letter-spacing:.05em">SEND VIA YOUR BANK APP → ZELLE</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px">
+          <div>
+            <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">SEND TO</div>
+            <div style="font-size:14px;font-family:var(--mono);color:var(--cyan)" id="z-email-val"></div>
+          </div>
+          <button class="btn btn-sm" onclick="copyToClip('${ZELLE_EMAIL}');this.textContent='✓';setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px">
+          <div>
+            <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">AMOUNT</div>
+            <div style="font-size:14px;font-family:var(--mono);color:var(--cyan)" id="z-amount-val"></div>
+          </div>
+          <button class="btn btn-sm" id="z-amt-copy-btn">Copy</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px">
+          <div>
+            <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">MEMO</div>
+            <div style="font-size:14px;font-family:var(--mono);color:var(--cyan)" id="z-memo-val"></div>
+          </div>
+          <button class="btn btn-sm" id="z-memo-copy-btn">Copy</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:12px;line-height:1.7">
+        1. Open your bank app<br>
+        2. Find Zelle (usually under Send Money)<br>
+        3. Enter the details above<br>
+        4. Hit send — you're done ✓
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:10px;text-align:center">
+      Questions? Email hello@zentura.media
+    </div>`;
+
+  document.getElementById('modal-body').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title">${inv.client}</div>
+    <div class="modal-code">${inv.code} · Created ${fmtDate(inv.created)}</div>
+    <span class="status-pill status-${status}">${statusLabel}</span>
+    <hr class="modal-divider"/>
+    <div class="modal-row">
+      <span class="modal-row-lbl">Description</span>
+      <span class="modal-row-val" style="max-width:60%;text-align:right;font-family:var(--sans);font-size:12px">${inv.desc||'—'}</span>
+    </div>
+    <div class="modal-row">
+      <span class="modal-row-lbl">Category</span>
+      <span class="modal-row-val">${inv.cat||'—'}</span>
+    </div>
+    <div class="modal-row">
+      <span class="modal-row-lbl">Due Date</span>
+      <span class="modal-row-val">${fmtDate(inv.due)}</span>
+    </div>
+    <hr class="modal-divider"/>
+    <div class="modal-total">
+      <span class="modal-total-lbl">Total Due</span>
+      <span class="modal-total-val">${fmt$(inv.amount)}</span>
+    </div>
+    <hr class="modal-divider"/>
+    ${paySection}
+    <div class="copy-link" onclick="copyToClip('${shareLink}')">
+      <span>🔗 ${shareLink}</span>
+      <span style="color:var(--text3);flex-shrink:0">copy link</span>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function toggleZelle(btn, code, amount) {
+  const card = document.getElementById('zelle-card');
+  const isOpen = card.style.display !== 'none';
+  card.style.display = isOpen ? 'none' : 'block';
+  btn.querySelector('.pay-sub').textContent = isOpen ? 'Tap for instructions' : 'Tap to hide';
+
+  if (!isOpen) {
+    document.getElementById('z-email-val').textContent = ZELLE_EMAIL;
+    document.getElementById('z-amount-val').textContent = fmt$(amount);
+    document.getElementById('z-memo-val').textContent = code;
+
+    const amtBtn = document.getElementById('z-amt-copy-btn');
+    amtBtn.onclick = () => { copyToClip(parseFloat(amount).toFixed(2)); amtBtn.textContent='✓'; setTimeout(()=>amtBtn.textContent='Copy',1500); };
+
+    const memoBtn = document.getElementById('z-memo-copy-btn');
+    memoBtn.onclick = () => { copyToClip(code); memoBtn.textContent='✓'; setTimeout(()=>memoBtn.textContent='Copy',1500); };
+  }
+}
+
+// ── INIT ──
+window.addEventListener('load', async () => {
+  await load();
+
+  // Pre-fill worker URL if saved
+  if (WORKER_URL) document.getElementById('worker-url-input').value = WORKER_URL;
+
+  // Check URL hash for direct invoice link
+  const hash = location.hash.replace('#','');
+  if (hash && hash.startsWith('INV-')) {
+    enterCustomer();
+  }
+});
+</script>
+
+</body>
+</html>

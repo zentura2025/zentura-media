@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stickers & Art — Zentura Media</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cyan:   #00eaff;
+  --magenta:#ff00ff;
+  --black:  #000000;
+  --white:  #ffffff;
+  --dim:    rgba(255,255,255,0.5);
+  --card-bg:rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── SCANLINE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+}
+
+.nav-brand {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #ff00ff, #00eaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+
+.nav-back {
+  font-size: 0.8rem;
+  color: var(--dim);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: var(--cyan); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 40px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* animated gradient orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,0,255,0.12) 0%, transparent 70%);
+  top: -100px; left: -100px;
+  animation: drift1 14s ease-in-out infinite;
+}
+.orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(0,234,255,0.1) 0%, transparent 70%);
+  bottom: -80px; right: -80px;
+  animation: drift2 18s ease-in-out infinite;
+}
+.orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,0,255,0.07) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: drift3 22s ease-in-out infinite;
+}
+
+@keyframes drift1 {
+  0%,100% { transform: translate(0,0); }
+  50%      { transform: translate(60px, 40px); }
+}
+@keyframes drift2 {
+  0%,100% { transform: translate(0,0); }
+  50%      { transform: translate(-40px, -60px); }
+}
+@keyframes drift3 {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50%      { transform: translate(-50%,-50%) scale(1.3); }
+}
+
+.hero-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.2s forwards;
+}
+
+.hero h1 {
+  font-size: clamp(48px, 8vw, 110px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #ff00ff, #00eaff, #ff00ff);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeUp 0.9s ease 0.4s forwards, shimmer 4s linear 1s infinite;
+  opacity: 0;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0%; }
+  100% { background-position: 200%; }
+}
+
+.hero h1 span {
+  display: block;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  background: linear-gradient(90deg, #00eaff, #ff00ff);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--dim);
+  max-width: 480px;
+  line-height: 1.75;
+  margin: 28px auto 48px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.6s forwards;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.8s forwards;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #ff00ff, #00eaff);
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 36px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+
+.btn-ghost {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-decoration: none;
+  padding: 14px 36px;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* ── SECTION SHARED ── */
+section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+
+.section-tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 48px;
+}
+
+.section-title .accent {
+  background: linear-gradient(90deg, #ff00ff, #00eaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── PROCESS ── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+
+.step {
+  background: var(--black);
+  padding: 40px 28px;
+  transition: background 0.3s;
+}
+.step:hover { background: var(--card-bg); }
+
+.step-num {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff00ff, #00eaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+.step h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: 0.04em;
+}
+
+.step p {
+  font-size: 0.88rem;
+  color: var(--dim);
+  line-height: 1.7;
+}
+
+/* ── OFFERINGS GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+
+.card {
+  background: var(--black);
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+  cursor: default;
+}
+.card:hover { background: var(--card-bg); }
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(to bottom, #ff00ff, #00eaff);
+  transition: height 0.4s ease;
+}
+.card:hover::before { height: 100%; }
+
+.card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.card-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+}
+
+.card p {
+  font-size: 0.9rem;
+  color: var(--dim);
+  line-height: 1.75;
+}
+
+/* ── VEHICLE WRAPS ── */
+#wraps {
+  max-width: 100%;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+
+.wraps-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 48px;
+}
+
+.wraps-inner .section-tag { color: var(--cyan); }
+
+.wrap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-top: 48px;
+}
+
+.wrap-card {
+  background: var(--black);
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  transition: background 0.3s;
+}
+.wrap-card:hover { background: var(--card-bg); }
+
+.wrap-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff00ff, #00eaff);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+.wrap-card:hover::before { transform: scaleX(1); }
+
+.wrap-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: rgba(255,255,255,0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.wrap-placeholder-icon {
+  font-size: 2.5rem;
+  opacity: 0.25;
+}
+
+.wrap-placeholder-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.15);
+}
+
+.wrap-card-body {
+  padding: 28px 28px 32px;
+}
+
+.wrap-vehicle {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  margin-bottom: 8px;
+}
+
+.wrap-card-body h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.wrap-card-body p {
+  font-size: 0.85rem;
+  color: var(--dim);
+  line-height: 1.7;
+}
+
+.wraps-note {
+  margin-top: 48px;
+  padding: 32px 40px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  background: rgba(255,255,255,0.02);
+}
+
+.wraps-note p {
+  font-size: 0.9rem;
+  color: var(--dim);
+  line-height: 1.75;
+  max-width: 600px;
+}
+
+.wraps-note p strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .wrap-grid { grid-template-columns: 1fr; }
+  .wraps-inner { padding: 80px 24px; }
+  .wraps-note { flex-direction: column; align-items: flex-start; }
+}
+
+/* ── COMMISSION ── */
+#commission {
+  max-width: 100%;
+  padding: 0;
+}
+
+.commission-wrap {
+  background: linear-gradient(135deg, rgba(255,0,255,0.05) 0%, rgba(0,234,255,0.05) 100%);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 100px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.commission-left h2 {
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.commission-left p {
+  font-size: 0.95rem;
+  color: var(--dim);
+  line-height: 1.8;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field label {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.field input,
+.field textarea,
+.field select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.field input::placeholder,
+.field textarea::placeholder { color: rgba(255,255,255,0.2); }
+.field input:focus,
+.field textarea:focus,
+.field select:focus { border-color: var(--cyan); }
+.field textarea { resize: vertical; min-height: 90px; }
+.field select option { background: #111; }
+
+.upload-area {
+  border: 1px dashed rgba(255,255,255,0.15);
+  padding: 24px;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.upload-area:hover { border-color: var(--magenta); color: var(--magenta); }
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 4px;
+}
+
+.btn-submit {
+  background: linear-gradient(90deg, #ff00ff, #00eaff);
+  color: #000;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 40px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-submit:hover { opacity: 0.85; transform: translateY(-2px); }
+
+.form-note {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.25);
+  line-height: 1.5;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 36px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+}
+
+.footer-brand {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #ff00ff, #00eaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.footer-note {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  nav { padding: 20px 24px; }
+  section { padding: 80px 24px; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .grid  { grid-template-columns: 1fr; }
+  .commission-wrap { grid-template-columns: 1fr; padding: 60px 24px; gap: 48px; }
+  footer { padding: 32px 24px; flex-direction: column; gap: 10px; }
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+
+  <nav>
+    <a href="index.html" class="nav-brand">Zentura Media</a>
+    <a href="index.html" class="nav-back">← Back</a>
+  </nav>
+
+  <!-- HERO -->
+
+  <div class="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+<p class="hero-label">Zentura Media — handcrafted originals</p>
+<h1>
+  Stickers
+  <span>&amp; Art</span>
+</h1>
+<p class="hero-sub">
+  Nothing here exists until you ask for it.
+  Every piece is made by hand, made to order,
+  and made for you — from stickers and studio art
+  to full vehicle wraps.
+</p>
+<div class="hero-cta">
+  <a href="#commission" class="btn-primary">Commission a piece</a>
+  <a href="#wraps" class="btn-ghost">Vehicle wraps ↓</a>
+</div>
+
+  </div>
+
+  <!-- PROCESS -->
+
+  <section class="reveal">
+    <p class="section-tag">How it works</p>
+    <h2 class="section-title">Four steps to <span class="accent">something original</span></h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Share your idea</h3>
+        <p>A pet, a concept, a reference photo. Tell us what you're imagining — there's no wrong answer.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>We sketch & confirm</h3>
+        <p>Chloe drafts the concept. You review it, refine it, and sign off before a single stroke is made.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Crafted by hand</h3>
+        <p>Everything is made in the studio. No templates, no shortcuts. Just focused craft from start to finish.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Delivered to you</h3>
+        <p>Packaged with care and shipped to your door. One of a kind, made for you specifically.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFERINGS -->
+
+  <section id="offerings" class="reveal">
+    <p class="section-tag">Collection</p>
+    <h2 class="section-title">What we <span class="accent">create</span></h2>
+    <div class="grid">
+      <div class="card">
+        <span class="card-icon">🐾</span>
+        <div class="card-tag">Most loved</div>
+        <h3>Pet Portraits &amp; Figurines</h3>
+        <p>Send us your best photos and we'll create a painted portrait or hand-sculpted figurine that captures their personality — not just their face.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏷️</span>
+        <div class="card-tag">Custom sets</div>
+        <h3>Sticker Designs</h3>
+        <p>Original illustrated stickers designed around your theme, your brand, or just something you love. Printed on quality vinyl or kept as digital art.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🖼️</span>
+        <div class="card-tag">One of a kind</div>
+        <h3>Original Artwork</h3>
+        <p>Paintings, mixed media, and wall pieces. Commission something specific or ask about available originals from the studio.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🚗</span>
+        <div class="card-tag">Full scale</div>
+        <h3>Vehicle Wraps</h3>
+        <p>Original anime-style art designed for your car, truck, or SUV. Chloe designs the wrap concept — you take it to your installer. Your vehicle becomes the canvas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VEHICLE WRAPS -->
+
+  <div id="wraps" class="reveal">
+    <div class="wraps-inner">
+      <p class="section-tag">Art that moves</p>
+      <h2 class="section-title">Vehicle <span class="accent">wraps</span></h2>
+
+      <div class="wrap-grid">
+
+        <div class="wrap-card">
+          <div class="wrap-placeholder">
+            <div class="wrap-placeholder-icon">🚗</div>
+            <div class="wrap-placeholder-label">Mockup coming soon</div>
+          </div>
+          <div class="wrap-card-body">
+            <div class="wrap-vehicle">Compact · Sedan</div>
+            <h3>The Subtle Statement</h3>
+            <p>Proof that unexpected vehicles make the boldest canvases. Original anime art on a daily driver — turns every parking lot into a gallery.</p>
+          </div>
+        </div>
+
+        <div class="wrap-card">
+          <div class="wrap-placeholder">
+            <div class="wrap-placeholder-icon">🚙</div>
+            <div class="wrap-placeholder-label">Mockup coming soon</div>
+          </div>
+          <div class="wrap-card-body">
+            <div class="wrap-vehicle">Sport Coupe</div>
+            <h3>The Character Study</h3>
+            <p>A sport coupe already has personality. Chloe's style adds a story — a character, a world, an identity that moves with you.</p>
+          </div>
+        </div>
+
+        <div class="wrap-card">
+          <div class="wrap-placeholder">
+            <div class="wrap-placeholder-icon">🏎️</div>
+            <div class="wrap-placeholder-label">Mockup coming soon</div>
+          </div>
+          <div class="wrap-card-body">
+            <div class="wrap-vehicle">Convertible · Muscle</div>
+            <h3>The Full Commitment</h3>
+            <p>When the top goes down the art goes everywhere. A convertible wrap is a moving mural. No half measures — this one owns every road it's on.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="wraps-note">
+        <p>Every wrap starts as an <strong>original design commission.</strong> Chloe creates the art concept for your specific vehicle — you handle printing and installation with your preferred wrap shop. <strong>You own the design file.</strong> No templates. No stock art. One vehicle, one artist, one piece.</p>
+        <a href="#commission" class="btn-primary" style="white-space:nowrap;">Start your wrap</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COMMISSION FORM -->
+
+  <div id="commission">
+    <div class="commission-wrap">
+      <div class="commission-left">
+        <p class="section-tag">Start here</p>
+        <h2>Commission<br><span class="accent">your piece</span></h2>
+        <p>Tell us what you're after. We'll get back to you within a couple of days to talk details and give you a quote.</p>
+      </div>
+
+  <form class="form" id="commission-form">
+    <div class="field">
+      <label>Your name</label>
+      <input type="text" name="name" placeholder="First & last" required />
+    </div>
+
+    <div class="field">
+      <label>Type of piece</label>
+      <select name="type">
+        <option value="" disabled selected>Select a category…</option>
+        <option>Pet portrait (painted)</option>
+        <option>Pet figurine (sculpted)</option>
+        <option>Custom sticker set</option>
+        <option>Original artwork</option>
+        <option>Vehicle wrap design</option>
+        <option>Something else</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Describe your idea</label>
+      <textarea name="message" placeholder="Tell us about the subject, style, size, any references you love…"></textarea>
+    </div>
+
+    <div class="form-footer">
+      <button class="btn-submit" type="submit" id="submit-btn">Send inquiry</button>
+      <p class="form-note">We'll reply within<br>2–3 business days</p>
+    </div>
+  <div id="form-success" style="display:none; margin-top:24px; padding:20px 24px; border:1px solid rgba(0,234,255,0.3); background:rgba(0,234,255,0.05);">
+      <p style="font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:#00eaff; margin:0;">✦ &nbsp; Your email client should open pre-filled — just hit send. Attach any reference photos right in the email.</p>
+    </div>
+    <div id="form-error" style="display:none; margin-top:24px; padding:20px 24px; border:1px solid rgba(255,0,255,0.3); background:rgba(255,0,255,0.05);">
+      <p style="font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:#ff00ff; margin:0;">✦ &nbsp; Something went wrong — please try again or email us directly.</p>
+    </div>
+  </form>
+</div>
+
+  </div>
+
+  <!-- FOOTER -->
+
+  <footer>
+    <div class="footer-brand">Zentura Media</div>
+    <div class="footer-note">All work handcrafted · Made to order</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(r => io.observe(r));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Commission inquiry — mailto
+    document.getElementById('commission-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var name    = document.querySelector('#commission-form input[name="name"]').value.trim();
+      var type    = document.querySelector('#commission-form select[name="type"]').value;
+      var message = document.querySelector('#commission-form textarea[name="message"]').value.trim();
+
+      var subject = encodeURIComponent('Commission Inquiry — ' + name + ' — ' + (type || 'Custom piece'));
+      var body = encodeURIComponent(
+        'Name: ' + name + '\n' +
+        'Type of piece: ' + (type || 'Not specified') + '\n\n' +
+        'Description:\n' + message + '\n\n' +
+        '— You can attach reference photos directly to this email.'
+      );
+
+      window.location.href = 'mailto:grooves@zentura.media?subject=' + subject + '&body=' + body;
+      document.getElementById('form-success').style.display = 'block';
+      document.getElementById('submit-btn').textContent = 'Opening your email ✦';
+    });
+  </script>
+
+</body>
+</html>
