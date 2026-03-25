@@ -39,6 +39,18 @@
         border-radius: 4px;
     }
 
+    .ghost {
+        background: transparent;
+        border: 1px solid white;
+        color: white;
+    }
+
+    .button-container {
+        display: flex;
+        gap: 10px;
+        align-self: flex-end;
+    }
+
     #output { 
         margin-top: 20px; 
         line-height: 1.6; 
@@ -52,7 +64,10 @@
     <h2>Zentura AI Explorer</h2>
     <div id="chat-box">
         <textarea id="userInput" placeholder="Ask me something... (Enter to send, Shift+Enter for new line)"></textarea>
-        <button onclick="askAI()">Ask</button>
+        <div class="button-container">
+            <button onclick="askAI()">Ask</button>
+            <button class="ghost" onclick="clearAll()">Clear</button>
+        </div>
         <div id="output">Response will appear here...</div>
     </div>
 
@@ -74,6 +89,11 @@
                 outputDiv.innerText = "Error connecting to the worker.";
                 console.error(error);
             }
+        }
+
+        function clearAll() {
+            document.getElementById('userInput').value = '';
+            document.getElementById('output').innerText = 'Response will appear here...';
         }
 
         // Listen for the "Enter" key inside the textarea
