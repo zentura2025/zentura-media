@@ -80,7 +80,7 @@
 
             try {
                 // This connects directly to your new worker
-                const response = await fetch(`https://twilight-hall-d61a.zentura.workers.dev/ask=${encodeURIComponent(input)}`);
+                const response = await fetch(`https://mystic-ai.zentura.workers.dev/ask=${encodeURIComponent(input)}`);
                 const data = await response.json();
                 
                 // We pull the "response" field from your JSON
