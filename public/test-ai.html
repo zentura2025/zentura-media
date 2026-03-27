@@ -78,17 +78,18 @@
             
             outputDiv.innerText = "Thinking...";
 
-            try {
-                // This connects directly to your new worker
-                const response = await fetch(`https://mystic-ai.zentura.workers.dev/ask=${encodeURIComponent(input)}`);
-                const data = await response.json();
-                
-                // We pull the "response" field from your JSON
-                outputDiv.innerText = data.response;
-            } catch (error) {
-                outputDiv.innerText = "Error connecting to the worker.";
-                console.error(error);
-            }
+           try {
+    const AI_ENDPOINT = "https://mystic-ai.zentura.workers.dev";
+
+    const response = await fetch(`${AI_ENDPOINT}/ask=${encodeURIComponent(input)}`);
+    const data = await response.json();
+
+    outputDiv.innerText = data.response;
+} catch (error) {
+    outputDiv.innerText = "Error connecting to the worker.";
+    console.error(error);
+}
+
         }
 
         function clearAll() {
