@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #1a3a6a;
+            border-bottom: 3px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .card-item {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 5px solid #007bff; /* Primary accent color */
+        }
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        .card-title {
+            font-size: 1.4em;
+            color: #1a3a6a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .card-title::before {
+            content: '🔗';
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        .card-description {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .card-link {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .card-link:hover {
+            background-color: #0056b3;
+        }
+
+        /* Specific styling for the model integration card */
+        .gemma-specific {
+            border-left-color: #ff9800; /* Amber accent for Gemma */
+        }
+        .gemma-specific .card-title::before {
+            content: '🤖'; /* Robot emoji for AI model */
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Project Development Portal</h1>
+
+        <div class="card-grid">
+
+            <!-- Original Card 1 -->
+            <div class="card-item">
+                <div class="card-title">GitHub Repository</div>
+                <div class="card-description">Code hosting and version control for the core project modules. Check for the latest commits.</div>
+                <a href="#" class="card-link">Go to Repository</a>
+            </div>
+
+            <!-- Original Card 2 -->
+            <div class="card-item">
+                <div class="card-title">Jira Issue Tracker</div>
+                <div class="card-description">Manage bugs, feature requests, and track the status of all assigned development tasks.</div>
+                <a href="#" class="card-link">View Board</a>
+            </div>
+            
+            <!-- Original Card 3 -->
+            <div class="card-item">
+                <div class="card-title">Confluence Documentation</div>
+                <div class="card-description">Up-to-date technical specifications, API documentation, and onboarding guides for new team members.</div>
+                <a href="#" class="card-link">Open Wiki</a>
+            </div>
+
+            <!-- Original Card 4 -->
+            <div class="card-item">
+                <div class="card-title">TestFlight Beta</div>
+                <div class="card-description">Latest build testing environment. Feedback is crucial before the general release candidate.</div>
+                <a href="#" class="card-link">Download Build</a>
+            </div>
+
+            <!-- ORIGINAL CARD 5 (Example Placeholder) -->
+            <div class="card-item">
+                <div class="card-title">Stripe Payments</div>
+                <div class="card-description">API keys and documentation for handling all subscription and payment gateway transactions.</div>
+                <a href="#" class="card-link">Manage Keys</a>
+            </div>
+
+            <!-- ORIGINAL CARD 6 (Example Placeholder) -->
+            <div class="card-item">
+                <div class="card-title">AWS Console</div>
+                <div class="card-description">Cloud infrastructure management, monitoring services, and deployment pipelines (CI/CD).</div>
+                <a href="#" class="card-link">Go to Cloud</a>
+            </div>
+            
+            <!-- ======================================================== -->
+            <!-- NEW CARD: GEMMA 4 INTEGRATION -->
+            <!-- ======================================================== -->
+            <div class="card-item gemma-specific">
+                <div class="card-title">Gemma 4 AI Engine</div>
+                <div class="card-description">Access and test the latest version of the integrated generative model. Ideal for text processing and natural language features.</div>
+                <a href="#" class="card-link">Test API Endpoint</a>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+Zentura Media
+
+Zentura Media — Admin Logs. https://admin-logs.zentura.workers.dev/
+Agent Starter.  https://ai-zen-agents.zentura.workers.dev/
+The Repository https://lodi.zentura.media/
+Cloudflare D1 Ledger.  https://zentura-accounting.zentura.workers.dev/
+Scheduler — Zentura https://zentura.media/scheduler
+Zentura.  https://zentura.media/
+Submit to Zentura https://zentura.media/submit
+Zentura Inbox https://zentura.media/inbox
+Agency Zoloto https://main.zoloto.pages.dev/dashboard
+KuroeKat Bookkeeping http://localhost:5173/ (temporary)
+Trade Parser file:///Users/zentura/projects/Trade-Parser/Trade-Parser.html (local Only)
+Zentura Accounting https://zentura-accounting.zentura.workers.dev/
+
+
+Workers
+├── zentura-scheduler      → backs /scheduler
+├── zenturasubmit          → handles submission POSTs
+├── zentura-package        → inbox + dashboard + manuscript storage
+├── zenturabackstage       → backs /backstage-new (new is for NEW blog entries)
+├── zenturasetlist         → grooves/setlist logic
+├── zentura-api            → general API layer
+├── groove-db              → grooves database
+│
+├── mystic-ai              → future AI endpoint
+│
+└── mystic-ai-Decommissioned  → safe to delete
+
+Pages
+/
+├── index.html
+├── about.html
+├── backstage-new.html
+├── changenotes.html
+├── contact.html
+├── gallery.html
+├── golden.html
+├── grooves.html
+│   └── groove1.mp3
+├── hotnews.html
+├── news.html
+├── privacy.html
+├── publishing.html
+├── scheduler.html
+└── stickers.html
